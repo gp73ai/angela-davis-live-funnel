@@ -1,3 +1,14 @@
 {
-  "version": 2
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/choose-your-path",
+      "destination": "/choose-your-path.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/choose-your-path.html"
+    }
+  ]
 }
