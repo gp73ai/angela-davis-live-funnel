@@ -10,5 +10,13 @@
       "source": "/dashboard",
       "destination": "/choose-your-path.html"
     }
+  ],
+  
+  "redirects": [
+    {
+      "source": "/influenceher",
+      "destination": "/influencHer",
+      "permanent": true
+    }
   ]
 }
