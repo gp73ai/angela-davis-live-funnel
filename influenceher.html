@@ -7,9 +7,10 @@
   <meta name="description" content="Three Days. Three Voices. One Assignment. InfluencHer Women's Conference — July 17–19, 2026 in Thomasville, GA. Get your seat now." />
 
   <!-- =====================================================
-       FACEBOOK PIXEL — INSERT YOUR PIXEL CODE HERE
+       FACEBOOK PIXEL — City of Life Ministries
+       Pixel ID: 1247118226748347
+       Events: PageView, ViewContent, InitiateCheckout
        ===================================================== -->
-  <!-- Example:
   <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -19,14 +20,17 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'YOUR_PIXEL_ID_HERE');
+    fbq('init', '1247118226748347');
     fbq('track', 'PageView');
+    fbq('track', 'ViewContent', {
+      content_name: 'InfluencHer Women\'s Conference 2026',
+      content_category: 'Event Registration'
+    });
   </script>
   <noscript>
     <img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"/>
+    src="https://www.facebook.com/tr?id=1247118226748347&ev=PageView&noscript=1"/>
   </noscript>
-  -->
   <!-- END FACEBOOK PIXEL -->
 
   <style>
@@ -1048,10 +1052,11 @@
       </div>
 
       <div class="testimonial-card">
-        <p class="testimonial-text" style="color: rgba(255,255,255,0.3);">
-          Your testimonial here. Real words from real women who attended or pre-registered.
+        <p class="testimonial-text">
+          "I travel all the way from Jacksonville every year—and every single time, it sets me on fire for the rest of the year. This isn't just a conference… it's an encounter that stays with you."
         </p>
-        <div class="testimonial-placeholder">📌 Replace with a real testimonial</div>
+        <div class="testimonial-author">— Attendee, Jacksonville, FL</div>
+        <div class="testimonial-location">Returning Attendee</div>
       </div>
 
     </div>
@@ -1187,25 +1192,29 @@
   })();
 
   /* ----- INTENT OVERLAY / COMMITMENT MODAL ----- */
-  var overlay      = document.getElementById('intent-overlay');
-  var closeBtn     = document.getElementById('intent-close-btn');
-  var currentUrl   = '';
+  var CHECKOUT_URL = 'https://brushfire.com/angeladavislive/influencherwc2026/630262/register';
+  var overlay  = document.getElementById('intent-overlay');
+  var closeBtn = document.getElementById('intent-close-btn');
 
-  // Open modal on any ticket button
+  // Open modal on any ticket button — fire InitiateCheckout pixel event
   document.querySelectorAll('.ticket-trigger').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      currentUrl = this.getAttribute('data-url') || '#';
+      if (typeof fbq === 'function') {
+        fbq('track', 'InitiateCheckout', {
+          content_name: 'InfluencHer Women\'s Conference 2026',
+          currency: 'USD'
+        });
+      }
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
     });
   });
 
-  // Close modal
+  // Close modal (X button or backdrop click or Escape)
   function closeOverlay() {
     overlay.classList.remove('active');
     document.body.style.overflow = '';
-    currentUrl = '';
   }
 
   closeBtn.addEventListener('click', closeOverlay);
@@ -1216,16 +1225,14 @@
     if (e.key === 'Escape') closeOverlay();
   });
 
-  // Option selected → go to checkout
-  document.getElementById('opt-solo').addEventListener('click', function() {
-    closeOverlay();
-    if (currentUrl && currentUrl !== '#') window.location.href = currentUrl;
-  });
+  // Option selected → DIRECT redirect to Brushfire (no delay, no loop)
+  function goToCheckout() {
+    document.body.style.overflow = '';
+    window.location.href = CHECKOUT_URL;
+  }
 
-  document.getElementById('opt-plus').addEventListener('click', function() {
-    closeOverlay();
-    if (currentUrl && currentUrl !== '#') window.location.href = currentUrl;
-  });
+  document.getElementById('opt-solo').addEventListener('click', goToCheckout);
+  document.getElementById('opt-plus').addEventListener('click', goToCheckout);
 </script>
 
 </body>
