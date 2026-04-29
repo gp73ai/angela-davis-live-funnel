@@ -1612,10 +1612,18 @@ export default async function handler(req, res) {
     }
 
     // RATE LIMIT CHECK — before any processing
+    // Bypass limits on angeladavislive.com and localhost for testing
+    const _host = (req.headers['host'] || '').toLowerCase();
+    const _bypassLimit = _host === 'angeladavislive.com' ||
+      _host === 'www.angeladavislive.com' ||
+      _host.includes('localhost') ||
+      _host.includes('127.0.0.1') ||
+      _host.includes('.vercel.app'); // also bypass on Vercel preview URLs
+
     const { entry, limit, overDaily, overStudy } = checkUsage(sessionId, tier);
     usageMap.set(sessionId, entry); // ensure entry exists
 
-    if (overStudy) {
+    if (!_bypassLimit && overStudy) {
       return res.status(429).json({
         source: 'gp73-limit',
         limitType: 'study_session',
@@ -1624,7 +1632,7 @@ export default async function handler(req, res) {
       });
     }
 
-    if (overDaily) {
+    if (!_bypassLimit && overDaily) {
       return res.status(429).json({
         source: 'gp73-limit',
         limitType: 'daily',
@@ -1637,7 +1645,7 @@ export default async function handler(req, res) {
 
     // Count this request
     incrementUsage(sessionId);
-    const remaining = limit - (entry.count + 1);
+    const remaining = _bypassLimit ? 999999 : limit - (entry.count + 1);
 
     // Load short-term memory for this session
     const sessionMem = getMemory(sessionId);
