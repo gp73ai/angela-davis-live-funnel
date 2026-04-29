@@ -60,7 +60,7 @@
 
   .nav-cta {
     background: #ff2d8d;
-    color: #fff !important;
+    color: #000 !important;
     font-weight: 700;
     padding: 8px 18px;
     border-radius: 4px;
@@ -138,7 +138,7 @@
     position: absolute;
     inset: -8px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,45,141,0.2) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,45,141,0.25) 0%, transparent 70%);
     z-index: 0;
   }
 
@@ -238,7 +238,7 @@
 
   .chip:hover {
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
   }
 
   /* ─── INPUT ─── */
@@ -268,7 +268,7 @@
     width: 100%;
     padding: 16px;
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
     font-weight: 900;
     font-size: 17px;
     border: none;
@@ -296,7 +296,7 @@
   .gp73-sel-pill.locked { opacity: 0.4; }
   .gp73-unlock-nudge { display: none; background: #0f0f00; border: 1px solid rgba(255,45,141,0.2); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #aaa; align-items: center; justify-content: space-between; gap: 10px; }
   .gp73-unlock-nudge.show { display: flex; }
-  .gp73-unlock-nudge a { background: #ff2d8d; color: #fff; font-weight: 700; font-size: 12px; padding: 5px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+  .gp73-unlock-nudge a { background: #ff2d8d; color: #000; font-weight: 700; font-size: 12px; padding: 5px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
   .gp73-quiz-steps { display: flex; gap: 5px; margin-bottom: 18px; }
   .gp73-step { flex: 1; height: 3px; border-radius: 3px; background: #1a1a1a; transition: background 0.3s; }
   .gp73-step.done { background: #ff2d8d; }
@@ -310,11 +310,11 @@
   .gp73-fb { font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; display: none; }
   .gp73-fb.ok { background: rgba(80,200,120,0.1); color: #50c878; display: block; }
   .gp73-fb.bad { background: rgba(255,80,80,0.1); color: #ff6060; display: block; }
-  .gp73-submit { width: 100%; background: #ff2d8d; color: #fff; font-weight: 700; font-size: 15px; padding: 13px; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; margin-top: 4px; }
+  .gp73-submit { width: 100%; background: #ff2d8d; color: #000; font-weight: 700; font-size: 15px; padding: 13px; border: none; border-radius: 10px; cursor: pointer; font-family: inherit; margin-top: 4px; }
   .gp73-submit:disabled { opacity: 0.4; cursor: not-allowed; }
   .gp73-result-score { font-size: 52px; font-weight: 900; color: #ff2d8d; line-height: 1; margin-bottom: 4px; }
   .gp73-stage-pill { display: inline-block; padding: 4px 14px; border-radius: 100px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
-  .gp73-result-cta { display: block; width: 100%; text-align: center; background: #ff2d8d; color: #fff; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 10px; text-decoration: none; margin-bottom: 10px; }
+  .gp73-result-cta { display: block; width: 100%; text-align: center; background: #ff2d8d; color: #000; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 10px; text-decoration: none; margin-bottom: 10px; }
   .gp73-close { width: 100%; background: transparent; border: 1px solid #333; color: #888; font-size: 14px; padding: 10px; border-radius: 8px; cursor: pointer; font-family: inherit; }
   /* PAYWALL */
   .gp73-paywall { text-align: center; padding: 8px 0; }
@@ -327,7 +327,7 @@
   .gp73-tier-price { font-size: 22px; font-weight: 900; color: #ff2d8d; }
   .gp73-tier-name { font-size: 14px; font-weight: 700; color: #f4f4f4; margin-bottom: 4px; }
   .gp73-tier-desc { font-size: 12px; color: #666; }
-  .gp73-tier-badge { font-size: 10px; font-weight: 700; background: #ff2d8d; color: #fff; padding: 2px 8px; border-radius: 100px; margin-left: 8px; letter-spacing: .04em; }
+  .gp73-tier-badge { font-size: 10px; font-weight: 700; background: #ff2d8d; color: #000; padding: 2px 8px; border-radius: 100px; margin-left: 8px; letter-spacing: .04em; }
   /* VOICE */
   #voiceBtn.recording { border-color: #ff6060; color: #ff6060; animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
@@ -405,8 +405,8 @@
 
   .cta-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(255,214,0,0.5);
-    box-shadow: 0 6px 24px rgba(224,86,167,0.08);
+    border-color: rgba(255,45,141,0.5);
+    box-shadow: 0 6px 24px rgba(255,45,141,0.08);
   }
 
   .cta-card-tag {
@@ -435,7 +435,7 @@
     display: block;
     text-align: center;
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
     font-weight: 800;
     font-size: 14px;
     padding: 12px 14px;
@@ -449,12 +449,12 @@
 
   .cta-card-btn.outline {
     background: transparent;
-    border: 1px solid rgba(255,214,0,0.5);
+    border: 1px solid rgba(255,45,141,0.5);
     color: #ff2d8d;
   }
 
   .cta-card-btn.outline:hover {
-    background: rgba(224,86,167,0.08);
+    background: rgba(255,45,141,0.08);
     border-color: #ff2d8d;
   }
 
@@ -551,7 +551,7 @@
     display: block;
     text-align: center;
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
     font-weight: 800;
     font-size: 14px;
     padding: 12px;
@@ -578,7 +578,7 @@
     padding: 3px 10px;
     border-radius: 100px;
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
     width: fit-content;
   }
 
@@ -624,7 +624,7 @@
   .ladder-btn {
     display: inline-block;
     background: #ff2d8d;
-    color: #fff;
+    color: #000;
     font-weight: 800;
     font-size: 14px;
     padding: 10px 24px;
@@ -715,7 +715,7 @@
 
     <p class="hero-sub">Scripture-based understanding for women who want to grow with purpose, depth, and clarity — not confusion.</p>
 
-    <p class="hero-attribution">— Apostle Angela Davis</p>
+    <p class="hero-attribution">— Angela Davis, Angela Davis Live</p>
   </div>
 
   <div class="hero-right">
@@ -724,11 +724,11 @@
         <img
           class="apostle-photo"
           src="https://raw.githubusercontent.com/gp73ai/angela-davis-live-funnel/main/angela.jpg"
-          onerror="this.src=''; this.style.display='none';"
+          onerror="this.style.display='none'; this.parentElement.style.background='#1a1a1a';"
           alt="Angela Davis"
         />
       </div>
-      <div class="apostle-label">Apostle Angela Davis</div>
+      <div class="apostle-label">Angela Davis</div>
       <div class="apostle-title">Angela Davis Live</div>
     </div>
   </div>
@@ -740,7 +740,7 @@
 
   <div class="bot-section-header">
     <h2>Ask Anything. Get <span>Real Clarity</span> Instantly.</h2>
-    <p>Type a real question. Get a real, scripture-based answer — no confusion, no opinions.</p>
+    <p>Ask a real question. Get a clear, scripture-based answer — no confusion, no guesswork.</p>
   </div>
 
   <div class="chips-label">Try asking →</div>
@@ -752,12 +752,12 @@
     <button class="chip" onclick="fillAndAsk('How do I actually hear from God?')">How do I hear from God?</button>
   </div>
 
-  <textarea id="q" placeholder="Ask anything… (ex: How do I grow in faith?)"></textarea>
+  <textarea id="q" placeholder="Ask anything… (ex: How do I grow in faith consistently?)"></textarea>
 
   <!-- DUAL CTA -->
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
     <button id="clarityBtn" class="ask-btn" onclick="ask()" style="flex:1;min-width:160px">Get Clarity &rarr;</button>
-    <button id="measureBtn" class="ask-btn" onclick="openTestModal('faith')" style="flex:1;min-width:160px;background:transparent;border:2px solid #ff2d8d;color:#ff2d8d" onmouseover="this.style.background='rgba(224,86,167,0.08)'" onmouseout="this.style.background='transparent'">Measure Your Understanding</button>
+    <button id="measureBtn" class="ask-btn" onclick="openTestModal('faith')" style="flex:1;min-width:160px;background:transparent;border:2px solid #ff2d8d;color:#ff2d8d" onmouseover="this.style.background='rgba(255,45,141,0.08)'" onmouseout="this.style.background='transparent'">Measure Your Understanding</button>
   </div>
 
   <!-- ─── ANSWER OUTPUT — directly under Get Clarity ─── -->
@@ -779,14 +779,14 @@
 
   <div id="topicLockNudge" style="display:none;background:#0f0f00;border:1px solid rgba(255,45,141,0.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#aaa;margin-bottom:8px;align-items:center;justify-content:space-between;gap:10px">
     <span>This topic unlocks with Core access.</span>
-    <a href="#" onclick="showPaywall('test');return false" style="background:#ff2d8d;color:#fff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:6px;text-decoration:none;white-space:nowrap">Unlock &rarr;</a>
+    <a href="#" onclick="showPaywall('test');return false" style="background:#ff2d8d;color:#000;font-weight:700;font-size:12px;padding:5px 12px;border-radius:6px;text-decoration:none;white-space:nowrap">Unlock &rarr;</a>
   </div>
 
   <!-- USAGE METER -->
   <div id="usageMeter" style="font-size:11px;color:#444;text-align:right;margin-bottom:4px"></div>
 
   <!-- ─── UNLOCK CTA BLOCK ─── -->
-  <div style="background:#0f0f00;border:1px solid rgba(255,45,141,0.2);border-radius:12px;padding:20px 22px;margin-bottom:12px">
+  <div style="background:#0f0f00;border:1px solid rgba(255,45,141,0.25);border-radius:12px;padding:20px 22px;margin-bottom:12px">
     <div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ff2d8d;font-weight:700;margin-bottom:6px">Unlock Full Access</div>
     <div style="font-size:14px;color:#aaa;margin-bottom:14px;line-height:1.6">You've started seeing where you stand. Go deeper with full clarity, testing, and progress tracking.</div>
     <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">
@@ -795,7 +795,7 @@
       <div style="font-size:13px;color:#888;display:flex;gap:8px;align-items:flex-start"><span style="color:#ff2d8d">&#9656;</span> Voice input + output (Premium)</div>
       <div style="font-size:13px;color:#888;display:flex;gap:8px;align-items:flex-start"><span style="color:#ff2d8d">&#9656;</span> Growth dashboard + topic tracking</div>
     </div>
-    <button id="membershipBtn" onclick="showPaywall('voice')" style="width:100%;background:#ff2d8d;color:#fff;font-weight:900;font-size:15px;padding:13px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.02em">See Membership Options &rarr;</button>
+    <button id="membershipBtn" onclick="showPaywall('voice')" style="width:100%;background:#ff2d8d;color:#000;font-weight:900;font-size:15px;padding:13px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.02em">See Membership Options &rarr;</button>
     <div style="text-align:center;margin-top:8px"><a href="#" style="font-size:12px;color:#555;text-decoration:underline">Already a member? Sign in</a></div>
   </div>
 
@@ -824,7 +824,7 @@
         <div style="font-size:11px;color:#555">placement</div>
       </div>
     </div>
-    <a href="/choose-your-path" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#fff;font-weight:900;font-size:14px;padding:12px;border-radius:8px;text-decoration:none;letter-spacing:.02em">Start Tracking Your Growth →</a>
+    <a href="/dashboard" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#000;font-weight:900;font-size:14px;padding:12px;border-radius:8px;text-decoration:none;letter-spacing:.02em">Start Tracking Your Growth →</a>
   </div>
 
   <!-- ─── VIDEO SECTION ─── -->
@@ -832,12 +832,12 @@
   <div id="founderVideo" style="margin-top:28px;margin-bottom:8px">
     <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:6px">Why this exists</div>
     <div style="font-size:13px;color:#666;margin-bottom:16px">Most people think they understand. Few actually do.</div>
-    <div id="videoThumb" onclick="openFounderVideo()" style="position:relative;width:100%;padding-top:56.25%;background:#0d0d0d;border:1px solid rgba(255,45,141,0.2);border-radius:10px;cursor:pointer;overflow:hidden;box-shadow:0 0 24px rgba(255,45,141,0.06);transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(255,214,0,0.5)'" onmouseout="this.style.borderColor='rgba(255,45,141,0.2)'">
+    <div id="videoThumb" onclick="openFounderVideo()" style="position:relative;width:100%;padding-top:56.25%;background:#0d0d0d;border:1px solid rgba(255,45,141,0.2);border-radius:10px;cursor:pointer;overflow:hidden;box-shadow:0 0 24px rgba(255,45,141,0.06);transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(255,45,141,0.5)'" onmouseout="this.style.borderColor='rgba(255,45,141,0.2)'">
       <div style="position:absolute;inset:0;background:linear-gradient(135deg,#0d0d0d 0%,#1a1400 100%)"></div>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:rgba(255,45,141,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="#000"><polygon points="8,5 19,12 8,19"/></svg>
       </div>
-      <div style="position:absolute;bottom:14px;left:16px;font-size:12px;color:rgba(255,214,0,0.7);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Angela Davis &mdash; Angela Davis Live</div>
+      <div style="position:absolute;bottom:14px;left:16px;font-size:12px;color:rgba(255,45,141,0.7);font-weight:700;letter-spacing:.08em;text-transform:uppercase">Angela Davis &mdash; Angela Davis Live</div>
     </div>
     <div id="videoEmbed" style="display:none;position:relative;width:100%;padding-top:56.25%;border-radius:10px;overflow:hidden">
       <iframe id="ytFrame" src="" allow="autoplay;encrypted-media" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:10px"></iframe>
@@ -862,7 +862,7 @@
         '<div style="font-size:28px;margin-bottom:12px">&#127910;</div>' +
         '<div style="font-size:16px;font-weight:700;color:#ff2d8d;margin-bottom:8px">Teaching video coming soon</div>' +
         '<div style="font-size:13px;color:#888;margin-bottom:20px">Angela Davis is recording the foundation teaching. Subscribe to know when it drops.</div>' +
-        '<a href="https://www.youtube.com/@angeladavislive" target="_blank" style="background:#ff2d8d;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">Subscribe on YouTube &rarr;</a>' +
+        '<a href="https://www.youtube.com/@angeladavislive" target="_blank" style="background:#ff2d8d;color:#000;font-weight:700;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none">Subscribe on YouTube &rarr;</a>' +
         '<div style="margin-top:14px;font-size:12px;color:#444;cursor:pointer" onclick="location.reload()">&#8592; Back</div>' +
         '</div>';
       thumb.onclick = null;
@@ -877,7 +877,7 @@
   <div class="study-done-banner" id="studyDoneBanner">
     <h3>You've taken in enough for today.</h3>
     <p>Growth happens when you apply what you've learned &mdash; not when you keep consuming. Come back when you've put it into practice.</p>
-    <a href="/choose-your-path" style="display:inline-block;margin-top:14px;background:transparent;border:1px solid rgba(255,45,141,0.4);color:#ff2d8d;font-size:13px;font-weight:700;padding:9px 20px;border-radius:8px;text-decoration:none">View Your Progress &#8594;</a>
+    <a href="/dashboard" style="display:inline-block;margin-top:14px;background:transparent;border:1px solid rgba(255,45,141,0.4);color:#ff2d8d;font-size:13px;font-weight:700;padding:9px 20px;border-radius:8px;text-decoration:none">View Your Progress &#8594;</a>
   </div>
 
   </div>
@@ -997,7 +997,7 @@
       <div class="product-badge coming">Coming Soon</div>
       <div class="product-price">$29</div>
       <div class="product-name">Learn the System</div>
-      <div class="product-hook">The framework behind the teaching. How Angela Davis interprets scripture, structures understanding, and removes confusion. PDF playbook — video coming.</div>
+      <div class="product-hook">The framework behind GP73. How Apostle Davis interprets scripture, structures understanding, and removes confusion. PDF playbook — video coming.</div>
       <a class="product-btn ghost" href="#">Notify Me</a>
     </div>
 
@@ -1017,7 +1017,7 @@
       <div style="background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:10px 16px;font-size:13px;color:#ccc">&#9656; Downloadable study PDFs</div>
       <div style="background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:10px 16px;font-size:13px;color:#ccc">&#9656; Full self-directed dashboard</div>
     </div>
-    <button onclick="window.location.href='https://stan.store/iamgodsprisoner/p/gp73-framework--identity--execution-system'" style="background:#ff2d8d;color:#fff;font-weight:900;font-size:16px;padding:15px 40px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.02em">Get the Framework &rarr;</button>
+    <button onclick="window.location.href='https://stan.store/iamgodsprisoner/p/gp73-framework--identity--execution-system'" style="background:#ff2d8d;color:#000;font-weight:900;font-size:16px;padding:15px 40px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;letter-spacing:.02em">Get the Framework &rarr;</button>
   </div>
 </div>
 
@@ -1084,12 +1084,8 @@
   // ── CHAT ──────────────────────────────────────────────────────────────────
   function fillAndAsk(question) {
     const input = document.getElementById('q');
-    if (!input) return;
     input.value = question;
     input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    input.focus();
-    // Auto-submit after a brief moment so the user sees what was filled
-    setTimeout(function() { ask(); }, 300);
   }
 
   let isLoading = false;
@@ -1145,7 +1141,7 @@
         const nudgeBox = document.createElement('div');
         nudgeBox.style.cssText = 'margin-top:14px;background:#0f0f00;border:1px solid rgba(255,45,141,0.2);border-radius:10px;padding:14px 16px';
         nudgeBox.innerHTML = '<div style="font-size:13px;color:#ccc;margin-bottom:10px">' + cn.text + '</div>' +
-          '<button onclick="openTestModal(\'' + cn.topic + '\')" style="background:#ff2d8d;color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border:none;border-radius:7px;cursor:pointer;font-family:inherit">Measure Your Understanding</button>';
+          '<button onclick="openTestModal(\'' + cn.topic + '\')" style="background:#ff2d8d;color:#000;font-weight:700;font-size:13px;padding:8px 18px;border:none;border-radius:7px;cursor:pointer;font-family:inherit">Measure Your Understanding</button>';
         out.appendChild(nudgeBox);
       }
 
@@ -1373,21 +1369,21 @@
       tierLabel = "You're still building your foundation";
       tierCls = 'stage-stuck';
       message = "You may recognize some truth, but you're not yet consistent in understanding or application.";
-      ctaHtml = '<a href="https://stan.store/iamgodsprisoner/p/join-the-discipleship-circle" class="gp73-result-cta" target="_blank" style="display:block;text-align:center;background:#ff2d8d;color:#fff;font-weight:700;font-size:15px;padding:13px;border-radius:10px;text-decoration:none;margin-bottom:10px">Start Building Your Foundation &rarr;</a>';
+      ctaHtml = '<a href="https://stan.store/iamgodsprisoner/p/join-the-discipleship-circle" class="gp73-result-cta" target="_blank" style="display:block;text-align:center;background:#ff2d8d;color:#000;font-weight:700;font-size:15px;padding:13px;border-radius:10px;text-decoration:none;margin-bottom:10px">Start Building Your Foundation &rarr;</a>';
     } else if (raw <= 6) {
       // TIER 2 — GROWTH
       tier = 'growth';
       tierLabel = "You're growing, but not consistent yet";
       tierCls = 'stage-aware';
       message = "You understand key truths, but there are gaps that will limit your growth if not corrected.";
-      ctaHtml = '<button class="gp73-result-cta" onclick="window.location.href=\'https://stan.store/iamgodsprisoner/p/growth--build-consistency\'" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#fff;font-weight:700;font-size:15px;padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;margin-bottom:10px">Strengthen Your Understanding &rarr;</button>';
+      ctaHtml = '<button class="gp73-result-cta" onclick="window.location.href=\'https://stan.store/iamgodsprisoner/p/growth--build-consistency\'" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#000;font-weight:700;font-size:15px;padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;margin-bottom:10px">Strengthen Your Understanding &rarr;</button>';
     } else {
       // TIER 3 — ADVANCED (7/7)
       tier = 'advanced';
       tierLabel = "You're not a beginner";
       tierCls = 'stage-growing';
       message = '';
-      ctaHtml = '<button class="gp73-result-cta" onclick="window.location.href=\'https://stan.store/iamgodsprisoner/p/gp73-framework--identity--execution-system\'" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#fff;font-weight:700;font-size:15px;padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;margin-bottom:10px">Step Into the Leadership Track &rarr;</button>';
+      ctaHtml = '<button class="gp73-result-cta" onclick="window.location.href=\'https://stan.store/iamgodsprisoner/p/gp73-framework--identity--execution-system\'" style="display:block;width:100%;text-align:center;background:#ff2d8d;color:#000;font-weight:700;font-size:15px;padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;margin-bottom:10px">Step Into the Leadership Track &rarr;</button>';
     }
 
     // Save placement to localStorage
@@ -1425,7 +1421,7 @@
       advancedBlock +
       ctaHtml +
       '<button onclick="improveThisArea()" style="width:100%;background:transparent;border:1px solid rgba(255,45,141,0.4);color:#ff2d8d;font-size:14px;font-weight:700;padding:12px;border-radius:10px;cursor:pointer;font-family:inherit;margin-bottom:10px">Go Practice This Topic</button>' +
-      '<a href="/choose-your-path" style="display:block;width:100%;text-align:center;background:transparent;border:1px solid #333;color:#888;font-size:13px;font-weight:600;padding:10px;border-radius:8px;text-decoration:none;margin-bottom:8px">Track Your Growth &#8594;</a>' +
+      '<a href="/dashboard" style="display:block;width:100%;text-align:center;background:transparent;border:1px solid #333;color:#888;font-size:13px;font-weight:600;padding:10px;border-radius:8px;text-decoration:none;margin-bottom:8px">Track Your Growth &#8594;</a>' +
       '<button class="gp73-close" onclick="closeModal(\'testModal\')">Close</button>';
   }
 
@@ -1464,7 +1460,8 @@
   document.addEventListener('DOMContentLoaded', () => {
 
     // -- Button bindings (belt-and-suspenders alongside inline onclick) --
-    // clarityBtn uses inline onclick="ask()" — no duplicate binding needed
+    var cb = document.getElementById('clarityBtn');
+    if (cb) cb.onclick = function() { ask(); };
 
     var mb = document.getElementById('measureBtn');
     if (mb) mb.onclick = function() { openTestModal('faith'); };
