@@ -14,7 +14,7 @@
   
   "redirects": [
     {
-      "source": "/influenceher",
+      "source": "/influencher",
       "destination": "/influencHer",
       "permanent": true
     }
