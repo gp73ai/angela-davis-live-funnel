@@ -1059,22 +1059,41 @@
     alert(msgs[tier] || 'Coming soon.');
     return false;
   }
-  let chatCount = parseInt(localStorage.getItem('gp73_chat_count') || '0');
+  // ── TEST MODE BYPASS ─────────────────────────────────────────────────────
+  // Limits are fully disabled on angeladavislive.com, vercel previews, localhost
+  const isTestMode = (typeof location !== 'undefined') && (
+    location.hostname === 'angeladavislive.com' ||
+    location.hostname === 'www.angeladavislive.com' ||
+    location.hostname.includes('vercel.app') ||
+    location.hostname === 'localhost' ||
+    location.hostname === '127.0.0.1'
+  );
+
+  // In test mode: wipe any stale counter that could trigger limits on load
+  if (isTestMode) {
+    localStorage.removeItem('gp73_chat_count');
+    localStorage.removeItem('gp73_chat_date');
+  }
+
+  const stored_count = localStorage.getItem('gp73_chat_count');
+  let chatCount = (stored_count !== null && stored_count !== '') ? Math.max(0, parseInt(stored_count, 10) || 0) : 0;
   const chatDate = localStorage.getItem('gp73_chat_date') || '';
   const today = new Date().toISOString().slice(0, 10);
-  if (chatDate !== today) { chatCount = 0; localStorage.setItem('gp73_chat_date', today); localStorage.setItem('gp73_chat_count', '0'); }
+  // Reset counter on new day
+  if (chatDate !== today) {
+    chatCount = 0;
+    localStorage.setItem('gp73_chat_date', today);
+    localStorage.setItem('gp73_chat_count', '0');
+  }
+
   const DAILY_LIMITS = { free: 5, circle: 15, core: 40, premium: 100 };
-  // Unlimited messages on angeladavislive.com and localhost (testing bypass)
-  const _isUnlimited = (typeof location !== 'undefined') &&
-    (location.hostname === 'angeladavislive.com' ||
-     location.hostname === 'www.angeladavislive.com' ||
-     location.hostname === 'localhost' ||
-     location.hostname === '127.0.0.1');
-  const dailyLimit = _isUnlimited ? 999999 : (DAILY_LIMITS[gp73Tier] || 5);
+  const dailyLimit = isTestMode ? 999999 : (DAILY_LIMITS[gp73Tier] || 5);
 
   function updateUsageMeter() {
     const el = document.getElementById('usageMeter');
     if (!el) return;
+    // Never show limit text in test mode
+    if (isTestMode) { el.textContent = ''; return; }
     const rem = Math.max(0, dailyLimit - chatCount);
     el.textContent = rem > 0 ? rem + ' messages remaining today' : 'Daily limit reached';
     el.style.color = rem <= 1 ? '#ff6060' : '#444';
@@ -1103,8 +1122,8 @@
     const q = document.getElementById('q').value.trim();
     if (!q) return;
 
-    // Client-side limit check before API call
-    if (chatCount >= dailyLimit) {
+    // Client-side limit check before API call — skipped entirely in test mode
+    if (!isTestMode && chatCount >= dailyLimit) {
       showPaywall('daily');
       return;
     }
@@ -1123,7 +1142,7 @@
       });
       const data = await res.json();
 
-      if (res.status === 429) {
+      if (res.status === 429 && !isTestMode) {
         if (data.limitType === 'study_session') {
           out.textContent = '';
           document.getElementById('studyDoneBanner').classList.add('show');
@@ -1166,8 +1185,8 @@
         // cards always visible — no toggle needed
       }, 600);
 
-      // Warn at 1 remaining
-      if (data.remaining === 1) {
+      // Warn at 1 remaining — skip in test mode
+      if (!isTestMode && data.remaining === 1) {
         setTimeout(() => {
           const warn = document.createElement('div');
           warn.style.cssText = 'margin-top:8px;font-size:12px;color:#888;text-align:center';
