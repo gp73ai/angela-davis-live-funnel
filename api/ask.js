@@ -1,0 +1,1781 @@
+// Angela Davis Live Bible Intelligence — Response Engine v6 — build 20260425
+export const config = {
+  runtime: 'nodejs',
+};
+
+// ============================================================
+// VOICE SYSTEM PROMPT — Chief's exact framework
+// ============================================================
+const VOICE_SYSTEM_PROMPT = `You are responding as a direct, authoritative teacher. You do not soften truth, you do not speak like a chatbot, and you do not give generic explanations.
+
+VOICE RULES:
+- Speak directly to the person using "you"
+- Sound like a real conversation, not a sermon or article
+- No soft openers (never say "I understand", "that's a great question", "it's normal", "many people feel")
+- No generic teaching language (avoid "Christianity is about...", "the Bible teaches...")
+- No over-explaining or long breakdowns
+- Keep responses tight -- 3 to 6 sentences max
+- No em dashes -- use commas or periods only
+
+STRUCTURE (MANDATORY):
+1. Start with a direct correction, challenge, or exposure of the person's thinking
+2. Identify the flaw, contradiction, or misplaced assumption
+3. Give a clear, simple truth -- not a lecture
+4. Close with a firm reality, decision, or consequence
+
+BEHAVIOR RULES:
+- Do NOT explain before correcting
+- Do NOT speak generally -- make it personal
+- Do NOT try to sound balanced or neutral
+- Do NOT avoid hard truth
+- If needed, clearly state eternal consequences without hesitation
+- Do NOT repeat the same opening phrase across responses
+
+TONE CONTROL:
+- Resistant or prideful questions: confront directly and expose the contradiction
+- Confused but honest questions: briefly clarify, then correct
+- Emotional questions: one short acknowledgment phrase max, then correct
+
+FINAL CHECK BEFORE RESPONDING:
+- Does the first sentence challenge or correct? If not, rewrite.
+- Does this sound like a real person speaking, not a chatbot? If not, rewrite.
+- Is it direct, tight, and personal? If not, rewrite.
+
+EXAMPLES OF YOUR VOICE:
+
+"You feel lost because you don't have direction, and you don't have direction because you're not aligned. You can't find your way by trying harder. You find it by submitting to the One who already knows where you're going."
+
+"Your faith is not working because you don't know how to work faith. Faith has laws. It has boundaries. It only honors what God says. Get in the Word -- because that's where faith comes from."
+
+"He's not your priority. You're consistent with what you value. If you're inconsistent with God, it's not a mystery -- it's a priority problem."
+
+"You do believe in tithing. You just don't believe in giving it to God. You don't question paying the world. You only question giving to God."
+
+"Everything you read in this world was written by men. You trust that, don't you? The issue isn't that men wrote it. The issue is you don't want what it says to be true."
+
+"You don't want control now, but you won't control what happens after you die. The only place you resist structure is where you want to keep doing what you're doing. That's not a Christianity problem. That's a surrender problem."`;
+
+const GENERAL_PROMPT = `Answer the question clearly and directly.
+Do not force spiritual framing onto a non-spiritual question.
+Do not sound like a chatbot.
+Keep it natural and concise.
+No em dashes. No filler.`;
+
+// ============================================================
+// ENTRY BANK — Chief's exact opening lines by posture
+// Rotated randomly. Never repeat the same opener twice in a row.
+// ============================================================
+const ENTRY_BANK = {
+  logic: [
+    "Everything you read in this world was written by men. You trust that, don't you?",
+    "That argument falls apart the moment you think it through.",
+    "You're not being consistent with your own logic.",
+    "Have you read something that wasn't written by men?",
+    "Then let science tell you what happens after you die.",
+    "Your thinking is flawed -- but so is everyone's until they learn better.",
+    "That's because you're calling everything religion. God calls it relationship.",
+    "You can't see oxygen either, but you trust it every second."
+  ],
+  resistant: [
+    "You can, but it won't be the God of the Bible.",
+    "You don't want control now, but you won't control what happens after you die.",
+    "That's not your real issue.",
+    "You're using that as a cover.",
+    "You don't have a control problem with Christianity -- you have a control problem, period.",
+    "You don't want truth. You want to stay comfortable.",
+    "God doesn't negotiate with that position."
+  ],
+  emotional: [
+    "If you were too far gone, you wouldn't still be here asking.",
+    "Good thing your feelings don't decide that. God already said He does.",
+    "Then you fail with help this time, not by yourself.",
+    "You're asking the right question from the wrong angle.",
+    "You've been taught this wrong. That's why it doesn't make sense yet.",
+    "Prayer isn't for feelings. It's for alignment.",
+    "You learned everything else by starting. This is no different."
+  ],
+  deflection: [
+    "Take your time. Just know you don't control when your time is up.",
+    "You're not too young to die. That's the part you're ignoring.",
+    "Because trying isn't transformation. You need training.",
+    "You start where everyone starts. Repent and come through Jesus.",
+    "That's not the real question you're asking."
+  ],
+  neutral: [
+    "Here's the truth whether you like it or not.",
+    "Let's be real for a second.",
+    "The issue isn't what you think it is.",
+    "You're looking at this from the wrong direction."
+  ]
+};
+
+function getEntryLine(posture, question) {
+  const q = question.toLowerCase();
+  let pool;
+
+  // Route to appropriate pool based on posture and question signals
+  if (posture === 'resistant') {
+    if (q.includes('bible') || q.includes('written by men') || q.includes('science') || q.includes('religion')) {
+      pool = ENTRY_BANK.logic;
+    } else if (q.includes('ready') || q.includes('later') || q.includes('young') || q.includes('time')) {
+      pool = ENTRY_BANK.deflection;
+    } else {
+      pool = ENTRY_BANK.resistant;
+    }
+  } else if (posture === 'emotional') {
+    pool = ENTRY_BANK.emotional;
+  } else {
+    pool = ENTRY_BANK.neutral;
+  }
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// ============================================================
+// PART 1 — POSTURE DETECTION
+// Resistant, emotional, or neutral -- adjusts HOW GPT corrects
+// ============================================================
+function detectPosture(q) {
+  const lower = q.toLowerCase();
+
+  const resistantSignals = [
+    "don't believe", "dont believe", "i don't think", "i dont think",
+    "why should i", "why would i", "that's not", "thats not",
+    "i tried", "it didn't work", "it doesnt work", "just want money",
+    "too controlling", "hypocrites", "i can be good", "don't need",
+    "dont need", "old testament", "man-made", "man made"
+  ];
+
+  const emotionalSignals = [
+    "feel", "feeling", "struggling", "hurt", "broken", "alone",
+    "lost", "scared", "hopeless", "depressed", "don't know",
+    "dont know", "overwhelmed", "tired", "confused", "not good enough"
+  ];
+
+  if (resistantSignals.some(s => lower.includes(s))) return 'resistant';
+  if (emotionalSignals.some(s => lower.includes(s))) return 'emotional';
+  return 'neutral';
+}
+
+// ============================================================
+// PART 2 — INTENT DETECTION
+// Spiritual, general, or other -- routes to correct prompt
+// ============================================================
+function detectIntent(input = '') {
+  const text = input.toLowerCase();
+
+  const spiritualWords = [
+    'god', 'faith', 'sin', 'bible', 'heaven', 'hell', 'jesus',
+    'holy spirit', 'prayer', 'pray', 'salvation', 'saved', 'grace', 'repent',
+    'scripture', 'church', 'worship', 'gospel', 'cross', 'forgive', 'eternal',
+    'tithe', 'tithing', 'pastor', 'calling', 'spirit', 'soul', 'heart'
+  ];
+
+  if (spiritualWords.some(w => text.includes(w))) return 'spiritual';
+
+  if (text.includes('what') || text.includes('how') || text.includes('why') ||
+      text.includes('when') || text.includes('who') || text.includes('is ') ||
+      text.includes('can ') || text.includes('does ')) return 'general';
+
+  return 'other';
+}
+
+// ============================================================
+// HARD-CODED VOICE RESPONSES — 42 of Chief's exact answers
+// GPT never runs for these. No retrieval. No blending.
+// ============================================================
+const VOICE_RESPONSES = [
+  {
+    patterns: ['what is faith', 'what faith really', 'define faith', 'faith really', 'is faith'],
+    answer: `Faith is not what most people think it is. It's not a feeling, and it's not just believing something will happen. Faith is a sequence of commands and codes to the spirit realm. You have to believe it before you can see it. Most people want to see it to believe it, but that's not how God operates. Faith cometh by hearing, hearing by the word of God. That means faith doesn't exist unless it's connected to a force that can make something out of nothing. Nothing can do that but God. And here's what people miss: if you don't believe, you still have faith. Your faith is just pointed at yourself and your own unbelief. By faith the worlds were framed. You can't even frame understanding without first believing you need to understand it.`
+  },
+  {
+    patterns: ['struggle with sin', 'why do i sin', 'saved and still sin', 'still struggle', 'saved but sin', 'why do i struggle'],
+    answer: `You struggle with sin because you don't fully understand what sin is yet. People think sin is just bad behavior. That's not it. Sin is a presence. A force. An inward element with a personality, a lifestyle, a taste. Sin was the most authentic relationship you ever had before God. It was the friend when nobody else was there. It was the anger that protected you from the bully. It was everything you reached for when you needed something. So when you got saved, you got a new heart and a new spirit. But you didn't get a new soul. You didn't get new desires or new memories overnight. Your soul still remembers. Paul said that husband is alive as long as the memory remains. That's the war. The answer is renewing your mind through the word. Not trying harder. Reprogramming.`
+  },
+  {
+    patterns: ['life not changing', 'why isnt my life', 'nothing is changing', 'life hasnt changed', 'why is my life', 'life not change', 'not changing'],
+    answer: `Your life changed. Your choices haven't caught up yet. The moment you confessed and repented, something happened that you can't undo. But people want a microwave. Salvation is instant. Transformation is not. You've still got the same patterns because you haven't renewed your mind yet, and renewal requires work. You have to learn to possess your soul. Your soul still answers to the old name. It still remembers the old life. It still believes what it was trained to believe. You can't shortcut that with prayer alone. You've got to get in the word, build new patterns, and stay consistent. It's like going to the gym. You don't walk in overweight and leave in shape. Muscles tear. It takes time. But the change is happening. You just haven't stayed in the process long enough to see it yet.`
+  },
+  {
+    patterns: ['how do i know god', 'is god real', 'prove god', 'god exist', 'god real', 'know god is real'],
+    answer: `You're breathing. The sun came up this morning. The ocean is in its place. The birds are flying. Something made all of that, and it wasn't you. You know God is real because there are things in your life you can't explain. Forces bigger than you that have moved on your behalf when you had no business surviving what you went through. Hebrews says it plainly: he that comes to God must believe that he is, and that he rewards those who diligently seek him. Seeking isn't passive. Through study and consistency in the word, you stop asking whether God is real and start realizing he's the only thing that is real. In him we live and move and have our being. If God withdrew himself, you'd know it immediately because nothing would exist. I don't try to convince atheists. At the end, we'll all see.`
+  },
+  {
+    patterns: ['god isnt listening', 'god not listening', 'god doesnt hear', 'god not hearing', 'feel like god', 'god listening', 'not listening to me'],
+    answer: `Your feelings don't determine whether God is listening. The condition of your spirit does. John 9:31 is direct: God does not hear sinners, but if any man is a worshiper of God and does his will, him he will hear. So the question isn't whether you feel heard. The question is whether you're in the right condition to be heard. Are you saved? Have you confessed Jesus Christ as your Lord? Because God operates on a specific carrier, and if you're not on it, you won't get through. That carrier is Jesus Christ. That's confession, belief, repentance, and actually walking toward transformation, not just claiming the title. Get on the right carrier and the connection opens. Feeling has nothing to do with it.`
+  },
+  {
+    patterns: ['who is jesus', 'who is jesus really', 'who was jesus', 'what is jesus'],
+    answer: `He is the Son of God. That is not opinion -- that is what the scriptures define. Whether you believe that or not does not change who He is. It just determines who He is to you. To some He is religion. To others He is just a way to feel forgiven. But to those who actually understand, He is transformation. He is the shift from old to new. He is the way to God and the standard for how to live in the earth. The problem is people don't believe on Him as the scriptures say. They believe based on church, tradition, or their own theology. But He is clearly defined. He is the Son of God.`
+  },
+  {
+    patterns: ['faith not working', 'why isnt my faith', 'faith doesnt work', 'faith not produce', 'why is my faith'],
+    answer: `Your faith is not working because you don't know how to work faith. Faith has to be tied to the original source -- and that source is the Word of God. It does not come from your belief system or positive thinking. It comes from what God actually said. God invented faith. So you don't get to redefine it or run it your way. Faith operates by God's Word. Just like in the beginning -- when God spoke, creation responded. That is how faith works. It responds to what God says. If your faith is not producing, it is not aligned. Faith has laws. It has boundaries. It has structure. And it only honors what God says. Get in the Word. Build your belief from there. Because faith comes by hearing -- and hearing by the Word of God.`
+  },
+  {
+    patterns: ['live how i want', 'live how i want and follow god', 'can i do what i want', 'follow god and live how', 'live any way i want'],
+    answer: `No. You cannot be a rebel and be submitted at the same time. You cannot serve yourself and serve God. You have to choose. Following God means giving up control. It means you are no longer the one leading -- He is. A disciple is not just someone who believes. A disciple is someone who is disciplined. So if you are trying to bring God into your life on your terms, like He is a genie, it is not going to work. God already made it clear -- He does not change. So either you follow Him, or you follow yourself. You can live how you want and follow your version of God -- but it will not be the real one.`
+  },
+  {
+    patterns: ['what does it mean to be saved', 'what is salvation', 'what does saved mean', 'being saved means', 'mean to be saved'],
+    answer: `It means you have stepped into a new life with a new standard. When you are saved, you receive a new heart and a new spirit. But your mind does not automatically change. Your thinking, your habits -- that part has to be trained. That is where most people get it wrong. They think salvation means everything shifts overnight. It does not. You have been made new -- but now you have to learn how to live new. It is no different than going to school. You do not just enroll -- you have to learn. The life you now live has to be lived by the faith of the Son of God. Salvation is the start. Transformation is what follows.`
+  },
+  {
+    patterns: ['how do i hear from god', 'how to hear god', 'hear from god', 'hear god speak', 'how do i actually hear'],
+    answer: `You hear from God by becoming aligned with God. First you need the Spirit of God -- because God speaks to those who are His. Then you develop an ear for Him. My sheep know my voice. That means recognition comes from relationship and alignment. If you are not aligned with Him, you will not recognize Him -- even if He is speaking. And that is the real issue. People want to hear God without being positioned for God. But if you are not following Him, what would be the point of hearing Him? Get aligned. Stay consistent. Learn His voice through His Word. Then when He speaks -- you will know.`
+  },
+  {
+    patterns: ['keep going back to sin', 'why do i keep sinning', 'keep returning to sin', 'keep falling back', 'go back to the same sin', 'keep going back'],
+    answer: `Because in your mind you are still the same person. You have not accepted that the old you is dead, so you keep feeding the identity that is supposed to be gone. You are trying to resist something you still believe is you. That is why you keep losing. You do not even recognize it as the enemy. You think it is just you. Your desires have not changed yet. Your taste is still trained by your old life. So when pressure comes, you go back to what feels natural. You do not break that by trying harder. You break it with training. You need the Word. You need discipline. You need new habits that replace the old ones. Paul said there is a law at work. That means this is not random -- it is patterned. Right now you still like what is killing you. So until you change what you feed and how you train, you are going to keep going back.`
+  },
+  {
+    patterns: ['if god loves me why is my life hard', 'why is life so hard', 'god loves me but life is hard', 'why is my life so difficult', 'why does god let life be hard'],
+    answer: `Because God never promised you an easy life. You are confusing love with comfort. That is not how this works. Life is hard by design. That is why you need God. You are in a fight whether you accept it or not. Scripture tells you to put on armor, not sit back and relax. You are fighting systems, mindsets, and spiritual forces that have been in place long before you showed up. Even Jesus had to fight and suffer. So why would you expect a smooth path? The difference is you are not alone. You have been given help, authority, and instruction. You just do not know how to use it yet. So instead of asking why it is hard, ask why you are not equipped. Stop whining. Start learning how to win.`
+  },
+  {
+    patterns: ['difference between religion and relationship', 'religion vs relationship', 'religion and relationship with god', 'what is religion vs', 'religion or relationship'],
+    answer: `Religion is a routine that makes you feel better without changing you. A real relationship changes you whether you like it or not. Religion lets you stay the same. You show up, do the motions, and walk away unchanged. It is controlled, predictable, and safe. A real relationship forces growth. It exposes you, corrects you, and pushes you higher. That is why people prefer religion. It does not challenge them. Religion locks God into a system. A relationship forces you to move with Him. If nothing in your life is being corrected, stretched, or transformed, you do not have a relationship. You have a routine.`
+  },
+  {
+    patterns: ['why do i feel far from god', 'feel distant from god', 'feel far from god', 'god feels distant', 'god feels far away'],
+    answer: `Because you do not know how to get close to Him. Feelings do not tell you distance. Alignment does. God already told you how this works. Draw near to Him and He will draw near to you. That means the move starts with you. If you are not in the Word, not seeking Him, not building the relationship, then of course you are going to feel distant. You want God to come into your routine, but you will not step into His. That is backwards. You do not approach God casually. You approach Him intentionally. If your heart is not positioned toward Him, you will feel far from Him even if He is right there. So stop measuring by feeling and start measuring by alignment.`
+  },
+  {
+    patterns: ['how do i actually change my life', 'how do i change my life', 'how to change my life', 'how do i change', 'i want to change my life'],
+    answer: `You change your life by giving up control of it. Most people want change but they do not want to change. They want different results without a different life. That does not work. Change requires submission, discipline, and training. You do not drift into a new life. You build it. Your old patterns are still in you. Your thinking is still shaped by your past. If you do not deal with that, you will recreate the same life in a different place. That is why people leave one situation and build another one just like it. You have to renew your mind, change your habits, and separate from what keeps pulling you back. That might mean different relationships, different environments, different decisions. This is not automatic. You have to train for the life you say you want.`
+  },
+  {
+    patterns: ['i believe in god but not jesus', 'dont need jesus', 'believe in god not jesus', 'i believe in god just not jesus', 'god without jesus'],
+    answer: `Belief doesn't make something true. You don't get to skip the process God established and still expect the outcome. You don't walk into a country and become a citizen without going through what's required. This is no different. You don't know who Jesus is. That's the real issue. He's not optional. He's the access point. You don't need Him now because you think you're in control. But when the moment comes that you can't control, you'll wish you had Him.`
+  },
+  {
+    patterns: ['i tried living for god and it didnt work', 'tried god before', 'gave god a chance and it didnt work', 'tried christianity and it failed', 'god didnt work for me'],
+    answer: `It didn't work because you were still doing it your way. You don't try God like an experiment. You submit to Him. If your life doesn't line up with His principles, the outcome won't line up either. That's not failure. That's consequence. When something doesn't work, you don't throw it away. You fix how you're using it. The problem isn't God. It's that you never actually let Him lead.`
+  },
+  {
+    patterns: ['why would a loving god allow suffering', 'why does god allow evil', 'why does god allow pain', 'if god is good why is there suffering', 'why does god let bad things happen'],
+    answer: `You're blaming God for what man and life produce. God created order. Man chose independence. What you see now is the result of that. Suffering isn't proof that God is absent. It's proof that this world is broken. And it's also the reason you need Him. You want a world with no pain but you don't want the authority that governs it. It doesn't work like that.`
+  },
+  {
+    patterns: ['dont want to lose who i am', 'afraid of losing myself', 'scared of changing who i am', 'will i lose my identity if i follow god', 'i dont want to change who i am'],
+    answer: `You're holding onto something that won't last anyway. Who you are right now is temporary. It fades, it's forgotten, and it can't carry you into eternity. You're protecting an identity that isn't built to last. The real question is not who you are here. It's where you're going after here. If you don't let go of who you are, you'll never become who you're supposed to be.`
+  },
+  {
+    patterns: ['i dont feel ready to change', 'not ready to give my life to god', 'i need more time', 'ill do it when im ready', 'not ready yet'],
+    answer: `You don't need to feel ready. You need to understand the risk of waiting. You don't control time. You don't control when your moment comes. So delaying the decision doesn't protect you. It exposes you. You can wait if you want. Just understand -- when the time runs out, so does the option.`
+  },
+  {
+    patterns: ['god wouldnt send people to hell', 'i dont think god sends people to hell', 'a loving god wouldnt send people to hell', 'hell doesnt exist', 'god is too loving for hell'],
+    answer: `It doesn't matter what you think. It matters what is. Hell is the result of rejecting God's order, not a random punishment. You break laws here, you face consequences. This is no different. You're trying to measure God with your logic. But your logic didn't create the system. You can disagree with it. But you'll still answer to it.`
+  },
+  {
+    patterns: ['christianity is too controlling', 'religion is controlling', 'god is too controlling', 'following god feels controlling', 'church is controlling'],
+    answer: `Because you don't understand what you signed up for. This isn't about doing whatever you want. It's about learning how to be led. Discipline always feels like control to someone who wants freedom on their terms. But what you call control is actually direction. You only resist it in the areas you don't want to change. And that's exactly where the problem is.`
+  },
+  {
+    patterns: ['i can be a good person without god', 'dont need god to be good', 'good person without religion', 'be good without god', 'good without church'],
+    answer: `You can do good things. That doesn't make you good at your core. Good deeds don't fix a broken condition. You can live a whole life doing right externally and still be wrong internally. That's why it matters. Because this isn't about behavior. It's about transformation.`
+  },
+  {
+    patterns: ['church people are hypocrites', 'christians are hypocrites', 'hypocrites in the church', 'why are christians hypocrites', 'religious hypocrites'],
+    answer: `That sounds like an excuse. You're pointing at people to avoid dealing with yourself. Every group has flawed people. That doesn't invalidate the purpose of the group. You don't quit school because of a bad teacher. So why quit your development because of imperfect people? The issue isn't them. It's that you don't want the process.`
+  },
+  {
+    patterns: ['i dont trust pastors', 'dont trust religion', 'cant trust the church', 'pastors are corrupt', 'dont trust religious leaders'],
+    answer: `Good. Don't trust blindly. But your distrust doesn't remove your responsibility. God never said every pastor would be right. He said He would provide leadership. You're using bad examples to justify disconnection. That doesn't fix anything. It just leaves you without guidance. At some point you have to decide: are you avoiding people, or avoiding growth?`
+  },
+  {
+    patterns: ['bible was written by men', 'written by men', 'bible written by men', 'men wrote the bible', 'humans wrote the bible'],
+    answer: `Everything you read in this world was written by men. You trust that, don't you? Your history books, your science textbooks, your laws -- all written by men. You don't question those. So the issue isn't that men wrote it. The issue is you don't want what it says to be true. That's a different problem. And that's the one you actually need to deal with.`
+  },
+  {
+    patterns: ['christianity sounds like control', 'christianity is control', 'christianity limits me', 'following god is control', 'god is controlling me'],
+    answer: `You don't want control now, but you won't control what happens after you die. That's the part you're not thinking about. Everything you trust in this life has rules. Your job has rules. Your body has rules. The road has rules. You don't call those control -- you call them necessary. The only place you resist structure is where you want to keep doing what you're doing. That's not a Christianity problem. That's a surrender problem. And surrender is exactly what this requires.`
+  },
+  {
+    patterns: ['dont believe in tithing', 'tithing is old testament', 'tithe is not required', 'i dont tithe', 'tithing is not biblical'],
+    answer: `You do believe in tithing. You just don't believe in giving it to God. You pay it every day -- phone bill, car note, taxes, school systems. You already live by giving a portion to keep systems running. So this isn't about belief. It's about where your loyalty is. You don't question paying the world. You only question giving to God. Tithing is just a system that supports what you're connected to. So say it right. You don't have a problem with tithing. You have a problem with tithing to God.`
+  },
+  {
+    patterns: ['churches just want money', 'church is about money', 'church only wants money', 'pastors just want your money', 'tithing is a scam'],
+    answer: `No, churches need money to function. You don't expect anything else in life to run for free, so why do you expect that from the church? Lights, building, staff, outreach -- none of that runs without money. You'll pay for food, games, entertainment without thinking twice. But when it comes to God, now it's a problem. That's not logic. That's priority. If only a small percentage gave in any system, that system would collapse. So it's not about just wanting money. It's about sustaining what you say you're part of. The real question is not what the church is doing. It's what you're willing to support.`
+  },
+  {
+    patterns: ['not good enough for god', 'not worthy of god', 'too far gone for god', 'god cant love me', 'god wont accept me', 'not good enough'],
+    answer: `You're not. That's the truth. None of us are. That's the whole point. You feeling like you're not good enough is not a problem -- it's the signal that you need Him. God doesn't come to people who think they have it together. He comes to the ones who know they don't. You don't qualify yourself for God. He qualifies you. No good deeds, no effort, no morality can make you good enough. That's why Christ came. He did what you could never do. So stop letting that feeling push you away. Let it push you in.`
+  },
+  {
+    patterns: ['what does it mean to deny yourself', 'deny yourself', 'what is self denial', 'denying yourself', 'deny self'],
+    answer: `It means denying everything you think makes you who you are. Your personality, your preferences, your habits, your reactions -- all of it gets challenged. Because the version of you that you've grown comfortable with is not the final version God is building. That's why it's hard. You're trying to let go of what feels like your real identity. You have to stop feeding your past and start training for your future. Forget what's behind you. That's not your reference point anymore. When you understand where you're headed, self can't lead you there. So you deny it.`
+  },
+  {
+    patterns: ['start strong and fall off', 'why do i fall off', 'start strong then quit', 'cant stay consistent', 'why do i give up', 'fall off track'],
+    answer: `Because starting is easy. Staying requires discipline. Most people don't count the cost of what it takes to finish. They get excited, but they're not built yet. Scripture already told you this -- many are called, few are chosen. The one who endures to the end is the one who wins. When you fall off, it's because you went back to yourself. Your old thinking, your old habits, your old desires start pulling again and you follow them. You're still trying to lead your life instead of letting God lead it. When God orders your steps, you don't fall off. When you take control back, you do. So the issue isn't your start. It's your submission.`
+  },
+  {
+    patterns: ['am i really saved', 'how do i know if im saved', 'really saved or emotional', 'saved or just emotional', 'how do i know im truly saved'],
+    answer: `You'll know by your fruit. Emotions don't disappear when you get saved, but they stop controlling you when you grow. Being saved is the beginning, not the finish. If you don't come into the knowledge of the truth, you stay stuck at the surface. The Word is what separates emotion from transformation. You can feel everything and still obey God. That's the difference. Jesus felt emotion, but He still said nevertheless. When you're really growing, your emotions lose their power to direct your decisions. They might speak, but they don't lead. That's how you know something real happened.`
+  },
+  {
+    patterns: ['why does god feel silent', 'god is silent', 'why is god quiet', 'god not speaking', 'god feels silent', 'god stopped speaking'],
+    answer: `Because sometimes He is. But silence does not mean absence. God will get quiet because He's testing what's already been built in you. When it's time for a test, the teacher stops talking. You already saw this -- Jesus was on the boat, asleep in the storm. His silence didn't mean He wasn't there. It meant they were supposed to respond with what they had already learned. God's silence is not punishment. It's confidence. He's watching to see if you'll use what He already gave you. So don't panic in silence. Go back to what you were taught and walk it out.`
+  },
+  {
+    patterns: ['how do i know my calling', 'what is my calling', 'how to find my calling', 'what am i called to do', 'find my purpose', 'what is my purpose'],
+    answer: `You don't discover your calling by chasing a role. You discover it by answering God. Most people are looking for a title, a position, or a gift. That's not your calling. Your first calling is to become like Christ. That's the foundation. Everything else comes after that. Yes, you may have gifts. Yes, you may walk in different functions. But if you don't understand who is calling you and what He's calling you to become, you'll misuse all of it. You're trying to figure it out before you've even answered. So stop worrying about what your calling is. Answer the call first. Then God will reveal the rest as you grow.`
+  },
+  {
+    patterns: ['hurt by the church', 'church hurt me', 'been hurt by church', 'why go back to church', 'church hurt', 'church disappointed me'],
+    answer: `Because your development doesn't happen in isolation. You got hurt by people, not by God. And you don't abandon purpose because people failed in their process. You get hurt in school, you still go back. You get hurt in life, you still keep living. So why is church the one place you quit? The church is full of people in development, just like you. That means there will be friction. That's not always damage. Sometimes that's growth. You don't even know who you are until you're around people who challenge you, frustrate you, and expose what's still in you. Running away doesn't heal you. It freezes you. So yes, go back. Grow up. Get stronger. And if needed, go to a different church -- but don't disconnect from the body.`
+  },
+  {
+    patterns: ['born this way', 'i was born this way', 'feel like i was born this way', 'created this way', 'made this way'],
+    answer: `It doesn't matter what you feel. It matters what God created. Your feelings are real, but they are not final. They don't define truth. God designed you with intention. Your body, your identity, your structure -- that wasn't random. When you try to override that, you're not discovering yourself. You're resisting your design. And the problem is people want to redefine themselves but still expect God to agree with it. That's not how this works. You have to choose. Either you align with what God created, or you follow what you feel. But your feelings don't rewrite truth.`
+  },
+  {
+    patterns: ['sex before marriage', 'is it wrong to have sex before marriage', 'premarital sex', 'sex before marriage if we love each other', 'is sex before marriage a sin'],
+    answer: `Yes. Love does not replace order. You're trying to take the benefits of covenant without the commitment of covenant. That's not how God designed it. Sex was never just physical. It connects souls. It transfers things. It binds people together deeper than they realize. So when you step into that outside of God's structure, you're opening yourself up without protection. Marriage is not just a ceremony. It's covering. It's alignment with how God set it up. You don't redefine the rules because you feel something strong. You either follow God's design, or you deal with the consequences of ignoring it.`
+  },
+  {
+    patterns: ['god feels unfair', 'god is unfair', 'why does god seem unfair', 'life feels unfair with god', 'god is not fair', 'why isnt god fair'],
+    answer: `Because you're expecting fairness from a God who operates in justice. God is not trying to make everything feel equal. He's working according to purpose. What looks unfair to you might be necessary for where you're going. Different people are given different levels of pressure, responsibility, and testing. That's not unfair. That's specific. You don't judge your life by what someone else is going through. You judge it by what God is producing in you. So instead of asking why it's not fair, ask what it's building. Because God doesn't waste pressure. He uses it.`
+  },
+  {
+    patterns: ['why do i keep doubting', 'why do i doubt god', 'i believe but i still doubt', 'doubt even when i believe', 'cant stop doubting'],
+    answer: `Because your confidence in doubt is stronger than your confidence in truth. Belief without knowledge is unstable. You don't have enough facts rooted in the Word, so your mind defaults back to what feels familiar. Doubt is comfortable. Faith is not. It's uncomfortable to believe what you can't see, what you haven't experienced, and what doesn't make sense yet. So when pressure comes, you fall back to what feels safe, not what is true. If you want to stop doubting, you need to build your belief on what God said, not what you see. Get the Word in you. Guard it. Act on it. That's how belief starts overpowering doubt.`
+  },
+  {
+    patterns: ['cant stay consistent with god', 'why cant i stay consistent', 'inconsistent with god', 'keep being inconsistent', 'struggle to be consistent with god'],
+    answer: `Because He's not your priority. You may like the idea of God, but your life shows what actually matters to you. You're consistent with what you value. That's just reality. If something is important to you, you make time for it. You stay disciplined with it. You don't negotiate with it. So if you're inconsistent with God, it's not a mystery. It's a priority problem. Scripture already made it plain -- if you love Him, you keep His commands. Consistency is not about effort. It's about value. And right now, you don't value Him enough to stay consistent.`
+  },
+  {
+    patterns: ['keep failing over and over', 'i keep failing', 'why do i keep failing', 'failing over and over', 'cant stop failing'],
+    answer: `You need to figure out if you're falling or failing. Falling is part of the process. Failing is lack of preparation. If you keep failing, it's because you're not training for what you're up against. This is not casual. You're dealing with real forces, real patterns, real habits that don't break just because you said a prayer. There are levels to this. And higher levels require preparation, discipline, and strategy. God doesn't pass you because you're tired of the lesson. He passes you when you master it. That's why people stay in the same cycle for years -- not because God won't move them forward, but because they haven't prepared to move forward. Stop asking why you keep failing. Start asking what you haven't mastered yet.`
+  },
+  {
+    patterns: ['other people are ahead of me', 'why is everyone ahead of me', 'why am i behind', 'others are further along', 'why do others seem more successful'],
+    answer: `Because they are. That's life. Somebody is always going to be ahead of you. But you're focused on the wrong thing. Your position doesn't matter as much as your posture. You're comparing progress when you should be focusing on alignment. Scripture already told you comparing yourself is unwise. So why are you doing it? You don't know what they had to go through to get where they are. And you don't know what they're dealing with right now. Stop watching them. Focus on what God is telling you to do. Get your posture right, and your position will take care of itself.`
+  },
+  {
+    patterns: ['do i have to read the bible every day', 'do i need to read the bible daily', 'read the bible every day', 'bible every day', 'how often should i read the bible'],
+    answer: `No, you don't have to read it every day. But you do have to live from it every day. Your spiritual life requires the same thing your natural body does -- daily intake. You eat every day. You drink every day. Because your body needs it. Your spirit is no different. If the Word is not in you, something else will take its place. If you've already built it in you, you can recall it, speak it, live from it. But if it's not in you, you have nothing to pull from. This is not about legalism. This is about survival. And the real issue is not discipline. It's love. Because if you loved Him, it wouldn't feel like a burden to stay in His Word.`
+  },
+  {
+    patterns: ['why do i keep doubting even', 'keep doubting even when', 'doubt even though i believe'],
+    answer: `Because your confidence in doubt is stronger than your confidence in truth. Belief without knowledge is unstable. You don't have enough facts rooted in the Word, so your mind defaults back to what feels familiar. Doubt is comfortable. Faith is not. It's uncomfortable to believe what you can't see, what you haven't experienced, and what doesn't make sense yet. So when pressure comes, you fall back to what feels safe, not what is true. If you want to stop doubting, you need to build your belief on what God said, not what you see. Get the Word in you. Guard it. Act on it. That's how belief starts overpowering doubt.`
+  },
+  {
+    patterns: ['doing everything right but life not getting better', 'i do everything right', 'doing everything right and nothing', 'why isnt my life getting better', 'doing everything right why'],
+    answer: `You're not doing everything right -- you're not even being humble. Nobody's done everything right except Jesus. So that mindset alone tells you something's off. You don't measure your life by your effort. You measure it by alignment.`
+  },
+  {
+    patterns: ['why would god create me knowing i would struggle', 'why did god make me this way', 'god knew i would struggle', 'why create me to suffer', 'why did god make me knowing'],
+    answer: `So you could experience victory. You don't get that without a fight. The struggle isn't the problem -- it's the setup.`
+  },
+  {
+    patterns: ['tired of trying', 'what is the point of all this', 'whats the point of trying', 'tired of fighting', 'im tired of this'],
+    answer: `The point is eternity. Heaven or hell. Where you spend forever -- that's the point.`
+  },
+  {
+    patterns: ['why does god bless other people and not me', 'god blesses everyone but me', 'why does god bless others', 'god blesses other people'],
+    answer: `God can bless whoever He wants. But you're wrong -- He's already blessed you. You being alive to ask that question is proof of it.`
+  },
+  {
+    patterns: ['ive been faithful and nothing changed', 'been faithful but nothing changes', 'i have been faithful', 'faithful but no results'],
+    answer: `If you can say you've been faithful, that is the change. You weren't always that.`
+  },
+  {
+    patterns: ['maybe this isnt for me', 'maybe god isnt for me', 'this faith isnt for me', 'christianity isnt for me', 'maybe religion isnt for me'],
+    answer: `It is for you -- you just don't want it. And if it's not God, then it's hell. There is no middle.`
+  },
+  {
+    patterns: ['why does god seem to ignore me', 'god is ignoring me', 'feel like god ignores me', 'god ignoring my prayers'],
+    answer: `It's not that He's ignoring you -- you're not approaching Him the right way. Repent, confess, believe. Then you'll be heard.`
+  },
+  {
+    patterns: ['keep messing up what is the point', 'what is the point if i just fail again', 'why try if i keep failing', 'point of trying if i fail'],
+    answer: `The point is the process. A just man falls and gets back up. If you're learning every time, you're not losing -- you're growing.`
+  },
+  {
+    patterns: ['god helping everyone else but me', 'god helps everyone but me', 'why does god help others and not me', 'god blesses everyone else'],
+    answer: `Because your feelings lie to you. You don't know who God is helping. And the fact you're alive asking that question means He's already helping you.`
+  },
+  {
+    patterns: ['i prayed and it didnt happen', 'prayed for something and nothing happened', 'my prayer wasnt answered', 'prayed and god didnt answer', 'prayer didnt work'],
+    answer: `The point is persistence. The point is patience. You don't quit because it didn't happen when you wanted it to.`
+  },
+  {
+    patterns: ['if god loves me why do i feel alone', 'god loves me but i feel alone', 'why do i feel so alone if god', 'feel alone even with god'],
+    answer: `Because feelings isolate you so you stop depending on God. But the truth is, you're not alone.`
+  },
+  {
+    patterns: ['keep asking god for help but nothing changes', 'asking god for help and nothing happens', 'is god even listening to me', 'god not answering my prayers'],
+    answer: `He's listening. You just don't control the timing. You don't rush God -- you trust Him.`
+  },
+  {
+    patterns: ['people who dont follow god seem happier', 'non believers seem happier', 'why do sinners seem happy', 'ungodly people seem better off'],
+    answer: `Because what you're seeing isn't the whole story. Happiness is surface. You're comparing appearances, not reality.`
+  },
+  {
+    patterns: ['messed up too many times god doesnt want me', 'too many mistakes for god', 'god doesnt want me anymore', 'messed up too many times'],
+    answer: `That's not true. God doesn't run out of chances. If you can repent, you can come back.`
+  },
+  {
+    patterns: ['what if i dont actually believe', 'i dont think i really believe', 'what if i dont believe deep down', 'not sure i really believe'],
+    answer: `Then you need to deal with that now. Because where that leads is not where you want to end up.`
+  },
+  {
+    patterns: ['following god feels harder than living how i want', 'why is following god so hard', 'living for god is harder', 'why is christianity so hard'],
+    answer: `Because discipline is always harder than doing whatever you want. But one leads somewhere -- one doesn't.`
+  },
+  {
+    patterns: ['no difference between believers and non believers', 'christians act just like everyone else', 'cant tell christians from non christians', 'believers dont look different'],
+    answer: `That's because you don't know what to look for. You can only recognize what you understand.`
+  },
+  {
+    patterns: ['what if this is all wrong', 'what if christianity is wrong', 'what if i wasted my time', 'what if i have been wrong about god'],
+    answer: `You didn't waste your time becoming better. You just don't see the value yet.`
+  }
+];
+
+// ============================================================
+// PATTERN MATCHER
+// ============================================================
+function checkHardCodedResponse(question) {
+  const q = question.toLowerCase()
+    .replace(/[\u2018\u2019\u201C\u201D"'?.,!]/g, '')
+    .trim();
+  for (const entry of VOICE_RESPONSES) {
+    const matched = entry.patterns.find(p => q.includes(p));
+    if (matched) {
+      console.log('[Angela Davis Live] Hard match:', matched);
+      return entry.answer;
+    }
+  }
+  return null;
+}
+
+// ============================================================
+// DOCTRINE FILTER
+// ============================================================
+function enforceDoctrine(question = '', answer = '') {
+  const q = question.toLowerCase();
+  if (q.includes('gay') || q.includes('homosexual') || q.includes('same sex') || q.includes('can i be gay')) {
+    return `No. You cannot live in a lifestyle that contradicts God's design and expect alignment with Him. God doesn't adjust His standards based on culture or feelings. Repentance means turning, not just feeling bad. You can't keep walking toward something God called sin and call it alignment with Him. You have to choose.`;
+  }
+  return answer;
+}
+
+// ============================================================
+// PART 3 — VOICE ENFORCER with retry logic
+// Rejects soft language and retries up to once
+// ============================================================
+// Only the hardest fails get rejected and retried
+// Soft phrases are stripped inline rather than triggering a full retry
+const HARD_BANNED_STARTS = [
+  "i understand how you feel",
+  "that's a great question",
+  "that's a good question",
+  "it's completely normal",
+  "many people struggle with",
+  "it is completely normal",
+  "christianity isn't about control",
+  "christianity is about guidance and freedom"
+];
+
+function voiceCheck(text) {
+  if (!text) return null;
+  const lower = text.toLowerCase().trim();
+
+  // Only hard-reject on the weakest possible openings
+  for (const start of HARD_BANNED_STARTS) {
+    if (lower.startsWith(start)) return null;
+  }
+
+  // Strip em dashes and clean up inline
+  return text.trim().replace(/—/g, ',');
+}
+
+// ============================================================
+// EMBEDDING + RAG via match_documents() RPC
+// ============================================================
+async function getEmbedding(question) {
+  const r = await fetch('https://api.openai.com/v1/embeddings', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({ model: 'text-embedding-3-small', input: question }),
+  });
+  const data = await r.json();
+  return data.data?.[0]?.embedding;
+}
+
+// Query Supabase using match_documents() vector similarity RPC
+// Returns top 3 tightest matches with keyword alignment check
+async function queryTeachings(question) {
+  try {
+    const embedding = await getEmbedding(question);
+    if (!embedding) return null;
+
+    // Pull top 8 candidates — we'll filter down to top 3
+    const rpcRes = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/rpc/match_documents`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: process.env.SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ query_embedding: embedding, match_count: 8 }),
+      }
+    );
+
+    if (!rpcRes.ok) {
+      console.warn('[Angela Davis Live RAG] RPC error:', rpcRes.status);
+      return null;
+    }
+
+    const docs = await rpcRes.json();
+    if (!Array.isArray(docs) || !docs.length) return null;
+
+    // STEP 1 — Similarity threshold filter
+    const aboveThreshold = docs.filter(d => (d.similarity || 0) >= 0.35);
+    if (!aboveThreshold.length) return null;
+
+    // STEP 2 — Keyword alignment check
+    // Extract meaningful terms from the question (skip stop words)
+    const stopWords = new Set(['what','is','the','a','an','of','to','in','and','or','for','do','does','how','why','when','who','are','was','were','be','been','i','my','me','you','your','we','they','it','this','that','can','will','have','has','had','not','no','but']);
+    const queryTerms = question.toLowerCase()
+      .replace(/[^a-z\s]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !stopWords.has(w));
+
+    // Score each doc by keyword hits in its content
+    const scored = aboveThreshold.map(d => {
+      const text = (d.content || d.title || '').toLowerCase();
+      const keywordHits = queryTerms.filter(term => text.includes(term)).length;
+      return { ...d, keywordHits };
+    });
+
+    // STEP 3 — Discard chunks with zero keyword alignment if we have better options
+    const aligned = scored.filter(d => d.keywordHits > 0);
+    const pool = aligned.length >= 1 ? aligned : scored; // fallback if no keyword match
+
+    // STEP 4 — Prefer chunks from the same teaching (highest similarity title)
+    // Group by title, pick best per title, then sort by similarity
+    const byTitle = {};
+    for (const d of pool) {
+      const key = (d.title || 'untitled').toLowerCase();
+      if (!byTitle[key] || d.similarity > byTitle[key].similarity) {
+        byTitle[key] = d;
+      }
+    }
+    const deduplicated = Object.values(byTitle)
+      .sort((a, b) => b.similarity - a.similarity);
+
+    // STEP 5 — Take top 3 only
+    const top3 = deduplicated.slice(0, 3);
+
+    console.log('[Angela Davis Live RAG] Selected:', top3.map(d => ({
+      id: d.id,
+      title: d.title,
+      sim: d.similarity?.toFixed(3),
+      keywordHits: d.keywordHits
+    })));
+
+    // STEP 6 — Build context block
+    // PRIMARY SOURCE: always the top match (highest similarity + keyword alignment)
+    // SECONDARY: only included if it shares the same core idea as primary
+    //   -- measured by title similarity or significant keyword overlap
+    // If secondary conflicts or diverges, discard it. Clarity > coverage.
+    const primary = top3[0];
+    const primaryText = (primary.content || '').replace(/\u0000/g, '').trim();
+    const primaryTitle = (primary.title || '').toLowerCase();
+
+    const reinforcing = top3.slice(1).filter(d => {
+      const secTitle = (d.title || '').toLowerCase();
+      const secText = (d.content || '').toLowerCase();
+      // Keep secondary only if title overlaps or shares 3+ key terms with primary
+      const titleOverlap = primaryTitle.split(' ').filter(w => w.length > 3 && secTitle.includes(w)).length;
+      const primaryWords = primaryText.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+      const termOverlap = primaryWords.filter(w => secText.includes(w)).length;
+      const keepIt = titleOverlap >= 1 || termOverlap >= 15;
+      if (!keepIt) console.log(`[Angela Davis Live RAG] Discarding divergent teaching: ${d.title}`);
+      return keepIt;
+    }).slice(0, 1); // max 1 reinforcing chunk
+
+    const selected = [primary, ...reinforcing];
+    console.log('[Angela Davis Live RAG]', selected.length === 1 ? 'Single source' : `Primary + 1 reinforcing chunk`);
+    console.log('[Angela Davis Live RAG] Primary:', primary.title);
+
+    const context = selected.map((d, i) => {
+      const text = (d.content || '').replace(/\u0000/g, '').trim();
+      const label = i === 0 ? `[Primary Teaching: ${d.title || 'Untitled'}]` : `[Supporting: ${d.title || 'Untitled'}]`;
+      return `${label}\n${text.slice(0, i === 0 ? 1600 : 800)}`;
+    }).join('\n\n---\n\n');
+
+    return context;
+
+  } catch (err) {
+    console.warn('[Angela Davis Live RAG] Query failed, falling through:', err.message);
+    return null;
+  }
+}
+
+function buildContext(docs = []) {
+  if (!docs.length) return { context: '', hasRelevant: false };
+  const relevant = docs.filter(d => (d.similarity || 0) >= 0.35);
+  if (!relevant.length) return { context: '', hasRelevant: false };
+  const context = relevant.slice(0, 3).map((d, i) => {
+    const raw = d.Content || d.Summary || '';
+    return `[Teaching ${i + 1}: ${d.Title || ''}]\n${raw.slice(0, 1200)}`;
+  }).join('\n\n---\n\n');
+  return { context, hasRelevant: true };
+}
+
+// ============================================================
+// PART 4 — GPT CALL with posture-aware transformation
+// ============================================================
+async function callGPT(messages, maxTokens = 250) {
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      temperature: 0.4,
+      max_tokens: maxTokens,
+      messages,
+    }),
+  });
+  const data = await r.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ============================================================
+// FOLLOW-UP DECISION ENGINE
+// Decides IF a follow-up question is needed and generates ONE if so.
+// Conditions to ask: confusion, desire to grow, stuck, needs clarification.
+// Conditions to stay silent: complete answer, factual question, clarity would be diluted.
+// ============================================================
+function shouldAskFollowUp(userSignal, toneClass, question) {
+  const lower = question.toLowerCase();
+
+  // Never follow up on direct factual questions
+  if (/^what is|^who is|^when did|^where is|^how many|^define/.test(lower)) return false;
+
+  // Never follow up when user is correcting -- they need a clear answer, not more questions
+  if (toneClass === 'CORRECTION') return false;
+
+  // Ask when user is confused, stuck, or showing desire to grow
+  if (userSignal.includes('confused') || userSignal.includes('clarity')) return true;
+  if (userSignal.includes('failure') || userSignal.includes('giving up')) return true;
+  if (userSignal.includes('practical instruction') || userSignal.includes('wants')) return true;
+  if (userSignal.includes('guilt') || userSignal.includes('shame')) return true;
+  if (userSignal.includes('doubt')) return true;
+
+  // Ask on open-ended seeking questions
+  if (toneClass === 'SEEKING' && /how do|what does|why does|what should|what does it mean/.test(lower)) return true;
+
+  return false;
+}
+
+// ============================================================
+// DETERMINISTIC FOLLOW-UP TABLE
+// Topic + path mapped to specific questions.
+// Predictable, specific, no GPT generation needed.
+// ============================================================
+const FOLLOW_UP_TABLE = {
+  SEEKING: {
+    faith:          'What part of faith feels hardest for you to actually live out right now?',
+    identity:       'What do you currently believe about who you are?',
+    sin:            'What do you think is driving that struggle beneath the surface?',
+    kingdom:        'Where do you see God\'s authority showing up in your life right now?',
+    soul:           'What does renewing your mind actually look like for you day to day?',
+    salvation:      'What changed in how you live after you were saved?',
+    prayer:         'What does your prayer actually look like when you sit down to do it?',
+    obedience:      'Where is obedience costing you something right now?',
+    transformation: 'What\'s one area where you can see actual change happening?',
+    doubt:          'What would it take for you to move past the doubt?',
+    suffering:      'What do you think God is building in you through this?',
+    relationships:  'Where is that relationship testing what you actually believe?',
+    'holy spirit':  'What does following the Spirit look like for you practically?',
+    church:         'What would a healthy church relationship actually require from you?',
+    general:        'What specifically are you trying to understand deeper?'
+  },
+  STRUGGLING: {
+    faith:          'What are you actually believing when things don\'t change?',
+    identity:       'Where do your actions contradict what you say you believe about yourself?',
+    sin:            'What keeps pulling you back into that pattern?',
+    kingdom:        'Where are you resisting God\'s direction in your life?',
+    soul:           'What are you feeding your mind with more than the Word right now?',
+    salvation:      'What does your life actually look like compared to when you first got saved?',
+    prayer:         'What are you asking God for that you\'re not willing to align with?',
+    obedience:      'Which instruction have you heard but not followed?',
+    transformation: 'What\'s the one thing you keep avoiding that you know needs to change?',
+    doubt:          'What would actually change if you decided to believe fully?',
+    suffering:      'Are you asking God to remove this or asking Him to build you through it?',
+    relationships:  'What pattern in that relationship mirrors something inside you?',
+    'holy spirit':  'Where are you overriding the Spirit with your own preference?',
+    church:         'What are you expecting from church that you\'re not willing to give?',
+    general:        'What have you already tried that hasn\'t worked?'
+  },
+  RESISTANCE: {
+    faith:          'Are you willing to let your definition of faith be corrected?',
+    identity:       'Are you holding onto something that contradicts who God says you are?',
+    sin:            'Are you willing to call it what it is instead of justifying it?',
+    kingdom:        'Are you willing to submit to God\'s authority or are you redefining it?',
+    soul:           'Are you willing to give up control of how this works?',
+    salvation:      'Are you following God or following a version of God you made up?',
+    prayer:         'Are you praying to change things or to be changed?',
+    obedience:      'Are you obeying what you heard or negotiating with it?',
+    transformation: 'Are you actually committed to change or just to talking about it?',
+    doubt:          'Are you willing to believe even if everything doesn\'t make sense first?',
+    suffering:      'Are you willing to trust God in this even if He doesn\'t remove it?',
+    relationships:  'Are you willing to change, or are you waiting for them to change first?',
+    'holy spirit':  'Are you following the Spirit or asking the Spirit to follow you?',
+    church:         'Are you open to being wrong about what church is supposed to be?',
+    general:        'Are you open to being wrong about this?'
+  },
+  HUNGER: {
+    faith:          'What\'s the next level of faith that you\'re not walking in yet?',
+    identity:       'What would your life look like if you actually lived from your God-given identity?',
+    sin:            'What would it take to close that door completely?',
+    kingdom:        'Where is God calling you to take dominion that you\'ve been avoiding?',
+    soul:           'What would it look like to fully possess your soul?',
+    salvation:      'What has changed in you since you got saved that you haven\'t fully developed?',
+    prayer:         'What would it look like to move from asking to aligning in prayer?',
+    obedience:      'What\'s the next level of obedience God is requiring from you?',
+    transformation: 'What does the next version of you actually look like?',
+    doubt:          'What would total surrender to this truth actually cost you?',
+    suffering:      'What is God producing in you through this that you couldn\'t get another way?',
+    relationships:  'How is God using that relationship to grow you into who He called you to be?',
+    'holy spirit':  'What would it look like to go from knowing about the Spirit to walking fully in Him?',
+    church:         'What would it look like for you to become what the church needs, not just attend it?',
+    general:        'Are you ready to apply this?'
+  }
+};
+
+function getFollowUp(path, topic) {
+  const pathMap = FOLLOW_UP_TABLE[path] || FOLLOW_UP_TABLE.SEEKING;
+  return pathMap[topic] || pathMap.general || null;
+}
+
+// Legacy async wrapper kept for compatibility -- now returns instantly
+async function generateFollowUp(question, answer, teachingContext, pathGuidance = null) {
+  return null; // replaced by deterministic table via getFollowUp()
+}
+
+// ============================================================
+// USER SIGNAL EXTRACTOR
+// Reads what the user is actually dealing with beneath the question
+// Returns { signal, detectionState } for prompt injection and routing
+// detectionState: standard | acknowledgement | unclear_application
+// ============================================================
+function extractUserSignal(q) {
+  const lower = q.toLowerCase();
+
+  // ACKNOWLEDGEMENT -- user agrees or says they understand but hasn't applied
+  if (/i understand|i see|that makes sense|i get it|i know that|you.re right|i agree|ok i see|that.s true/.test(lower)) {
+    return {
+      signal: 'user is acknowledging truth but has not yet applied it',
+      detectionState: 'acknowledgement'
+    };
+  }
+
+  // UNCLEAR APPLICATION -- user says they tried but gives no specifics
+  if (/i tried|i.ve tried|i attempted|i did that|i.ve been doing|i already did|i.ve done that|i have been trying/.test(lower)) {
+    return {
+      signal: 'user claims to have tried something but has not given specifics -- investigate before diagnosing',
+      detectionState: 'unclear_application'
+    };
+  }
+
+  // Failure / not working (with specifics already present)
+  if (/not working|doesn.t work|isn.t working|failed|failing|nothing.s changing|no change|no results/.test(lower))
+    return { signal: 'user is experiencing failure or lack of results and is questioning whether this works', detectionState: 'standard' };
+
+  // Confusion / doesn't understand
+  if (/don.t understand|doesn.t make sense|confused|confusing|lost|unclear|can.t figure/.test(lower))
+    return { signal: 'user is genuinely confused and needs clarity, not correction', detectionState: 'standard' };
+
+  // Frustration / giving up
+  if (/tired of|giving up|can.t keep|why bother|what.s the point|fed up|done trying/.test(lower))
+    return { signal: 'user is frustrated and close to giving up -- needs to be steadied, not lectured', detectionState: 'standard' };
+
+  // Guilt / shame
+  if (/feel guilty|feel ashamed|keep sinning|messed up|failed again|too far gone|not good enough/.test(lower))
+    return { signal: 'user is dealing with guilt or shame and may feel disqualified -- needs truth that restores', detectionState: 'standard' };
+
+  // Doubt / questioning
+  if (/don.t know if|not sure|wondering if|questioning|doubt|really true/.test(lower))
+    return { signal: 'user is in a season of doubt and needs grounded, specific truth -- not generic reassurance', detectionState: 'standard' };
+
+  // Pride / resistance
+  if (/i think|i believe|i don.t think|i disagree|that.s not right|why should i/.test(lower))
+    return { signal: 'user is confident in their own position -- needs direct truth that cuts through the assumption without attacking', detectionState: 'standard' };
+
+  // Desire / wanting something
+  if (/how do i|i want to|i need to|help me|show me|teach me/.test(lower))
+    return { signal: 'user wants practical instruction -- give them something they can actually do', detectionState: 'standard' };
+
+  // Pain / emotional
+  if (/hurting|hurt|broken|alone|scared|hopeless|depressed|pain|suffering/.test(lower))
+    return { signal: 'user is in emotional pain -- begin where they are, then move toward truth', detectionState: 'standard' };
+
+  return { signal: 'user is asking a genuine question and needs a clear, grounded answer', detectionState: 'standard' };
+}
+
+// ============================================================
+// CONVERSATION PATH CLASSIFIER
+// Classifies user into one of 4 guided progression paths.
+// Path persists per session unless user language clearly shifts.
+// CLARITY: confused, needs simplification
+// RENEWAL: understands but stuck/not applying
+// RESISTANCE: pushing back, justifying, defending
+// HUNGER: actively seeking growth, ready to go deeper
+// ============================================================
+function classifyPath(q, detectionState, toneClass, sessionPath) {
+  const lower = q.toLowerCase();
+
+  // RESISTANCE signals -- override session path immediately
+  if (
+    toneClass === 'CORRECTION' ||
+    /i don.t think|i disagree|but why|that.s not|i don.t believe|you.re wrong|why should i|i don.t need/.test(lower)
+  ) return 'RESISTANCE';
+
+  // CLARITY signals
+  if (
+    detectionState === 'acknowledgement' ||
+    /confused|don.t understand|what does that mean|how does that work|can you explain|i.m lost|unclear/.test(lower)
+  ) return 'CLARITY';
+
+  // RENEWAL signals -- knows truth but stuck
+  if (
+    detectionState === 'unclear_application' ||
+    /i know but|i understand but|i still|i keep|it.s not working|i.ve tried|nothing changes|same cycle|stuck/.test(lower)
+  ) return 'RENEWAL';
+
+  // HUNGER signals -- actively pursuing, ready for more
+  if (
+    /how do i|i want to|teach me|show me|i.m ready|what.s next|i want to grow|go deeper|what should i do/.test(lower)
+  ) return 'HUNGER';
+
+  // Default: keep current session path if set, otherwise infer from tone
+  if (sessionPath && sessionPath !== 'unset') return sessionPath;
+  if (toneClass === 'STRUGGLING') return 'RENEWAL';
+  if (toneClass === 'SEEKING') return 'HUNGER';
+  return 'CLARITY';
+}
+
+// ============================================================
+// ESCALATION ENGINE
+// Triggers after 3+ turns on same path without progress.
+// Returns escalation instruction to override normal response strategy.
+// Only fires once per path cycle (lastEscalatedPath prevents double-fire).
+// ============================================================
+function checkEscalation(mem, path) {
+  if (!mem || !path || path === 'unset') return null;
+  if ((mem.pathTurnCount || 0) < 3) return null; // minimum 3 turns before escalation
+  if (mem.lastEscalatedPath === path) return null; // already escalated this cycle
+
+  const escalations = {
+    RENEWAL: {
+      instruction: `ESCALATION — LOOP DETECTED. DO NOT TEACH. DO NOT EXPLAIN.
+This person has circled the same issue for 3+ turns without movement.
+Your ONLY job right now is to break the loop.
+
+FORMAT (strict):
+- 1 sentence: identify the pattern you see ("You keep saying X but nothing changes")
+- 1 sentence: present the 2 possibilities with no escape route
+- 1 forced-choice question — no soft ending
+
+EXAMPLE:
+"You've said this multiple times now, but the pattern hasn't changed. At this point, either you're not actually applying what you hear, or you're doing it your way instead of God's way. Which one is it?"
+
+HARD RULES:
+- Max 3-4 sentences total
+- No teaching paragraphs
+- No soft language
+- No "I understand" or "it's okay"
+- End with a forced-choice question — not an open question
+- Do NOT use: "At this point, it's not a lack of knowledge"
+- Name the actual repeated behavior you see`,
+      marker: 'RENEWAL_ESCALATED'
+    },
+    RESISTANCE: {
+      instruction: `ESCALATION — LOOP DETECTED. DO NOT TEACH. DO NOT EXPLAIN.
+This person has pushed back 3+ turns. Reasoning is not working.
+Your ONLY job is to force a decision.
+
+FORMAT (strict):
+- 1 sentence: name the resistance pattern directly
+- 1 sentence: reduce it to a binary
+- 1 forced-choice question — no escape route
+
+EXAMPLE:
+"You've been arguing the same point for a while now, but the argument doesn't change what's true. Either you're willing to submit to this or you're not. Which is it?"
+
+HARD RULES:
+- Max 3-4 sentences
+- No new evidence, no new teaching
+- End with binary: yes or no, this or that
+- No softening whatsoever`,
+      marker: 'RESISTANCE_ESCALATED'
+    },
+    CLARITY: {
+      instruction: `ESCALATION — LOOP DETECTED. STOP EXPLAINING.
+This person has received explanation for 3+ turns. If it hasn't landed, more explanation won't fix it.
+Your ONLY job is to test what they actually retained.
+
+FORMAT (strict):
+- 1 sentence: acknowledge the loop without judgment
+- 1 command: ask them to explain it back
+
+EXAMPLE:
+"We've been over this a few times now. Before we go further, explain it back to me in your own words — what does this actually mean to you?"
+
+HARD RULES:
+- Max 2-3 sentences
+- Do NOT reteach anything
+- Do NOT add new concepts
+- The question must require them to produce understanding, not just agree`,
+      marker: 'CLARITY_ESCALATED'
+    },
+    HUNGER: {
+      instruction: `ESCALATION — LOOP DETECTED. STOP TEACHING.
+This person has been engaging for 3+ turns. More concepts won't move them.
+Your ONLY job is to assign a specific action.
+
+FORMAT (strict):
+- 1 sentence: name that it's time to move from knowing to doing
+- 1 specific action step they can do today (not vague)
+- 1 close: "Do this today and come back."
+
+EXAMPLE:
+"You've heard enough to move. Today, take one specific area we've talked about and do the opposite of what you've been doing in that area. Do it today and come back."
+
+HARD RULES:
+- Max 3-4 sentences
+- The action must be concrete, not conceptual
+- No new teaching
+- No follow-up questions — just the assignment`,
+      marker: 'HUNGER_ESCALATED'
+    },
+  };
+
+  return escalations[path] || null;
+}
+
+function getPathStrategy(path) {
+  const strategies = {
+    CLARITY: {
+      responseInstruction: `The user is confused and needs clarity.
+- Simplify the truth without dumbing it down
+- Use plain, direct language -- no theological complexity
+- Confirm understanding by the end
+- Do NOT assume they grasp what they haven't asked about
+- One core idea per response`,
+      followUpTemplate: 'What do you understand now?',
+      followUpGuidance: 'Ask a short question to confirm their understanding of what was just explained. Natural, not a test.'
+    },
+    RENEWAL: {
+      responseInstruction: `The user understands the truth but is stuck and not applying it.
+- Do NOT re-explain basics they already know
+- Expose the belief gap -- what they say vs what they actually believe
+- Be direct about what is blocking them
+- Push toward action, not just knowledge`,
+      followUpTemplate: 'What are you actually believing right now?',
+      followUpGuidance: 'Ask a question that exposes the gap between what they know and what they actually believe in practice. Make it personal.'
+    },
+    RESISTANCE: {
+      responseInstruction: `The user is pushing back, justifying, or defending a wrong position.
+- Confront directly -- no softening, no hedging
+- Name the contradiction immediately
+- Do NOT validate the resistance
+- Do NOT over-explain -- make the point and hold it
+- Authority comes from precision, not volume`,
+      followUpTemplate: 'Are you willing to change that?',
+      followUpGuidance: 'Ask a short, direct question that calls for a decision, not more discussion. Do not offer escape routes.'
+    },
+    HUNGER: {
+      responseInstruction: `The user is ready to grow and actively pursuing truth.
+- Go deeper than the obvious answer
+- Introduce a higher-level truth or principle they may not have considered
+- Challenge them toward the next level of understanding
+- Treat them as capable of more -- do not hold back`,
+      followUpTemplate: 'Are you ready to apply this?',
+      followUpGuidance: 'Ask a forward-looking question that calls them to action on what was just taught. Specific to the topic.'
+    },
+  };
+  return strategies[path] || strategies.CLARITY;
+}
+
+// ============================================================
+// CORRECTION SENSITIVITY DETECTOR
+// Only runs when toneClass = CORRECTION
+// HIGH = identity, worth, salvation status, emotional charge
+// LOW = abstract belief error, theological disagreement
+// ============================================================
+function detectCorrectionSensitivity(q) {
+  const lower = q.toLowerCase();
+  const highSensitivitySignals = [
+    // Identity-based
+    'born this way', 'i was made this way', 'gay', 'transgender', 'who i am',
+    'my identity', 'i am who i am',
+    // Worth / salvation status
+    'not good enough', 'too far gone', 'god doesn\'t want me', 'god can\'t love me',
+    'i\'m not saved', 'i don\'t think i\'m saved', 'lost my salvation',
+    'god gave up on me', 'god abandoned me',
+    // Emotionally charged phrasing
+    'nobody cares', 'what\'s the point', 'i give up', 'nobody loves me',
+    'i hate myself', 'i want to die', 'i\'m nothing',
+  ];
+  return highSensitivitySignals.some(s => lower.includes(s)) ? 'HIGH' : 'LOW';
+}
+
+// ============================================================
+// TONE CLASSIFIER
+// Detects whether the user is SEEKING, STRUGGLING, or CORRECTING
+// This drives HOW the response opens and flows -- not what it says
+// ============================================================
+function classifyTone(q) {
+  const lower = q.toLowerCase();
+
+  // STRUGGLING -- emotional, defeated, confused, personal pain
+  const strugglingSignals = [
+    'why is', 'why am i', 'why do i', 'why can\'t i', 'why don\'t i',
+    'i feel', 'i\'m struggling', 'i keep', 'i can\'t', 'i don\'t understand',
+    'help me', 'not working for me', 'lost', 'confused', 'broken',
+    'depressed', 'hopeless', 'alone', 'tired', 'hurt', 'scared'
+  ];
+
+  // CORRECTION -- confident but potentially wrong assumptions, resistance, challenges
+  const correctionSignals = [
+    'i think', 'i believe', 'i don\'t think', 'i don\'t believe',
+    'why would', 'why should', 'i don\'t need', 'that\'s not',
+    'you\'re wrong', 'that doesn\'t make sense', 'i disagree',
+    'hypocrites', 'just want money', 'too controlling', 'man-made',
+    'old testament', 'doesn\'t work', 'never works'
+  ];
+
+  if (strugglingSignals.some(s => lower.includes(s))) return 'STRUGGLING';
+  if (correctionSignals.some(s => lower.includes(s))) return 'CORRECTION';
+  return 'SEEKING';
+}
+
+async function safeGenerate(question, systemPrompt, teachingContext, posture, conversationContext = null, sessionPath = 'unset', sessionMem = null) {
+
+  // Classify tone and extract user signal
+  const toneClass = classifyTone(question);
+  const { signal: userSignal, detectionState } = extractUserSignal(question);
+  console.log('[Angela Davis Live TONE]', toneClass);
+  console.log('[Angela Davis Live SIGNAL]', userSignal);
+  console.log('[Angela Davis Live STATE]', detectionState);
+
+  // Classify conversation path
+  const path = classifyPath(question, detectionState, toneClass, sessionPath);
+  const pathStrategy = getPathStrategy(path);
+  console.log('[Angela Davis Live PATH]', path);
+
+  // INVESTIGATION-FIRST ROUTING
+  // For acknowledgement or unclear application -- ask before diagnosing
+  if (detectionState === 'acknowledgement') {
+    const clarifyPrompt = `The user said: "${question}"
+
+They seem to be acknowledging something, but may not have actually applied it yet.
+Ask ONE short, natural, direct question that finds out what they actually understood -- not just that they agreed.
+Do NOT correct. Do NOT teach. Do NOT assume they got it.
+Example: "What exactly stood out to you from that?" or "What does that actually look like for you day to day?"
+Return ONLY the question. One sentence. Natural. No intro.`;
+
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({ model: 'gpt-4o', temperature: 0.4, max_tokens: 60, messages: [{ role: 'user', content: clarifyPrompt }] }),
+    });
+    const rd = await r.json();
+    const clarifyQ = (rd.choices?.[0]?.message?.content || '').trim();
+    return { answer: clarifyQ || 'What exactly did you understand from that?', toneClass, userSignal, detectionState, path, escalated: false };
+  }
+
+  if (detectionState === 'unclear_application') {
+    const investigatePrompt = `The user said: "${question}"
+
+They claim to have tried something but gave no specifics.
+Do NOT diagnose why it failed. Do NOT assume they didn't commit or didn't understand.
+Ask ONE short, direct question to find out what they actually did.
+Example: "What did you actually do?" or "Walk me through what you tried."
+Return ONLY the question. One sentence. Natural. No intro.`;
+
+    const r = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({ model: 'gpt-4o', temperature: 0.4, max_tokens: 60, messages: [{ role: 'user', content: investigatePrompt }] }),
+    });
+    const rd = await r.json();
+    const investigateQ = (rd.choices?.[0]?.message?.content || '').trim();
+    return { answer: investigateQ || 'What did you actually do?', toneClass, userSignal, detectionState, path, escalated: false };
+  }
+
+  // For CORRECTION: detect sensitivity level to calibrate delivery
+  const correctionSensitivity = toneClass === 'CORRECTION' ? detectCorrectionSensitivity(question) : null;
+  if (correctionSensitivity) console.log('[Angela Davis Live SENSITIVITY]', correctionSensitivity);
+
+  // Build tone-specific instruction -- no hardcoded openers, no templates
+  let toneInstruction;
+  if (toneClass === 'SEEKING') {
+    toneInstruction = `The person is genuinely curious. Open naturally -- no correction, no challenge. Draw them into the truth with clarity and confidence. Start with what the teaching says, not with what they got wrong. Vary how you begin each response.`;
+  } else if (toneClass === 'STRUGGLING') {
+    toneInstruction = `The person is hurting or confused. Do NOT open with correction or challenge. Begin with brief acknowledgment of where they are, then move them toward truth from the teachings. Be firm but not harsh. The tone is a steady hand, not a rebuke.`;
+  } else if (correctionSensitivity === 'HIGH') {
+    toneInstruction = `This person is dealing with something identity-based, deeply personal, or emotionally charged.
+Do NOT open with blunt rejection or a hard "No."
+Start with a positioning statement that names the real issue at the center of their question.
+Example pattern: "That question comes down to [core issue]." or "What you\'re really asking is whether [core truth]."
+Then deliver the correction clearly and directly from the teaching.
+Preserve full truth -- do not dilute doctrine. Improve HOW it lands, not WHAT it says.
+The correction must feel intentional, not reactive.`;
+  } else {
+    toneInstruction = `The person has a wrong assumption or abstract belief error. Address it directly.
+Do not start with a canned phrase like "Here's the truth" or "You're looking at this wrong."
+Expose the flaw naturally within the first sentence. Vary the opening -- no repeated patterns.
+Direct correction is appropriate here. Be clear and authoritative.`;
+  }
+
+  // Build grounded system prompt from teaching context when available
+  const structureRule = `
+RESPONSE STRUCTURE (follow this order, do NOT label sections, make it flow naturally):
+1. DIRECT ANSWER -- answer the question in 1-2 sentences. Get to the point immediately.
+2. TEACHING -- expand from the retrieved content. Use the exact language and framing from the teaching. Quote or closely paraphrase it. Do not summarize from memory -- pull directly from what is provided.
+3. APPLICATION -- close with what the person should do or understand next. Make it practical and personal.
+
+Total response: 4-7 sentences. Not a list. Not headers. Flowing prose that transforms, not just informs.
+The response must sound like it came FROM the teaching, not ABOUT it.
+
+VOICE CONSISTENCY RULES:
+- Use doctrinal framing patterns from the teaching: phrases like "your soul", "the Word", "God's design", "alignment", "transformation", "renewing the mind", "the spirit", "the flesh" when they appear in source material
+- Do NOT substitute these with generic Christian phrasing like "walk with Jesus", "personal relationship", "ask Him into your heart", "spiritual journey" unless that language appears in the retrieved teaching
+- The listener should recognize a consistent doctrinal voice across multiple responses
+- Vary sentence structure and tone, but keep the same theological vocabulary and framework
+- Authority comes through precision, not volume. Say the exact thing. Not more.`;
+
+  // Check if escalation is needed (3+ turns same path, not yet escalated this cycle)
+  const escalation = checkEscalation(sessionMem, path);
+  if (escalation) console.log('[Angela Davis Live ESCALATION]', path);
+
+  const pathInstruction = escalation
+    ? `\n${escalation.instruction}`
+    : `\nCONVERSATION PATH: ${path}\n${pathStrategy.responseInstruction}`;
+
+  const groundedSystem = teachingContext
+    ? `You are a biblical teacher responding from the teaching content provided below.
+You do NOT generate generic Christian answers.
+You speak from these specific teachings with their language, depth, and perspective.
+No em dashes. No filler phrases. No templated openers.
+
+${toneInstruction}
+
+${pathInstruction}
+
+${structureRule}
+
+GLOBAL RULES:
+- Never start two responses the same way
+- Do not wrap openers in quotation marks
+- Do not use: "Here's the truth whether you like it or not", "You're looking at this from the wrong direction", "The issue isn't what you think it is"
+- Sound like a real person teaching, not a scripted bot
+
+TEACHING CONTEXT:
+${teachingContext}`
+    : `${systemPrompt}
+
+${toneInstruction}
+
+${pathInstruction}
+
+${structureRule}
+
+GLOBAL RULES:
+- Never start two responses the same way
+- Do not wrap openers in quotation marks
+- Do not use: "Here's the truth whether you like it or not", "You're looking at this from the wrong direction"
+- Sound like a real person teaching, not a scripted bot`;
+
+  const conversationNote = conversationContext
+    ? `RECENT CONVERSATION (for continuity only -- do NOT let this override the current question):
+${conversationContext}
+
+`
+    : '';
+
+  const userPrompt = `${conversationNote}USER SITUATION: ${userSignal}
+
+Question: "${question}"
+
+RESPONSE TARGETING:
+- Your DIRECT ANSWER must address the user's actual situation, not just the topic in the abstract
+- Your TEACHING must connect explicitly back to what the user is dealing with
+- Your APPLICATION must be specific to their condition -- not generic advice like "pray more" or "read the Word" in isolation
+- Reflect their wording and situation naturally, without awkwardly copying it
+- The person should feel: "This was said FOR me"
+
+Respond directly and naturally. Use the teaching context. Do not guess or generalize beyond what is provided.`;
+
+  const messages = [
+    { role: 'system', content: groundedSystem },
+    { role: 'user', content: userPrompt },
+  ];
+
+  // GROUNDING CHECK
+  // Extracts key content terms from teaching context
+  // Verifies response contains at least some of them
+  // If not grounded, regenerates once with explicit anchoring instruction
+  function isGrounded(response, context) {
+    if (!context) return true; // no context = voice-only, skip check
+    const stopWords = new Set(['the','a','an','of','to','in','and','or','for','is','are','was','were','be','it','this','that','you','your','we','they','them','with','from','by','at','on','as','not','but','so','if','do','does']);
+    const contextTerms = context.toLowerCase()
+      .replace(/[^a-z\s]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 4 && !stopWords.has(w));
+    // Get unique high-value terms
+    const termFreq = {};
+    for (const t of contextTerms) termFreq[t] = (termFreq[t] || 0) + 1;
+    const keyTerms = Object.entries(termFreq)
+      .filter(([,count]) => count >= 2)
+      .sort((a,b) => b[1]-a[1])
+      .slice(0, 10)
+      .map(([term]) => term);
+    if (!keyTerms.length) return true;
+    const responseLower = response.toLowerCase();
+    const hits = keyTerms.filter(t => responseLower.includes(t)).length;
+    const groundingScore = hits / keyTerms.length;
+    console.log(`[Angela Davis Live GROUNDING] ${hits}/${keyTerms.length} key terms matched (${(groundingScore*100).toFixed(0)}%)`);
+    return groundingScore >= 0.25; // at least 25% of key terms must appear
+  }
+
+  // Use tight token limit during escalation to prevent teaching paragraphs
+  const tokenLimit = escalation ? 120 : 250;
+
+  // First attempt
+  const firstRaw = await callGPT(messages, tokenLimit);
+  console.log('[Angela Davis Live RAW]', firstRaw);
+  const firstClean = voiceCheck(firstRaw);
+
+  // During escalation skip grounding check -- we want the confrontation, not the teaching
+  if (escalation && firstClean) {
+    return { answer: firstClean, toneClass, userSignal, detectionState, path, escalated: true };
+  }
+
+  if (firstClean && isGrounded(firstClean, teachingContext)) {
+    return { answer: firstClean, toneClass, userSignal, detectionState, path, escalated: false };
+  }
+
+  // If not grounded or failed voice check -- regenerate with stricter anchor
+  console.log('[Angela Davis Live] Regenerating with stronger grounding instruction...');
+  const anchoredMessages = [
+    {
+      role: 'system',
+      content: messages[0].content + '\n\nCRITICAL: Your previous response was too generic. You MUST use specific words, phrases, and concepts directly from the TEACHING CONTEXT provided. Quote or closely paraphrase the actual teaching language. Do not summarize from general knowledge.'
+    },
+    messages[1]
+  ];
+  const secondRaw = await callGPT(anchoredMessages, tokenLimit);
+  console.log('[Angela Davis Live RAW 2]', secondRaw);
+  const secondClean = voiceCheck(secondRaw);
+  return { answer: secondClean || secondRaw.trim() || 'Check the Word on this one.', toneClass, userSignal, detectionState, path, escalated: !!escalation };
+}
+
+// ============================================================
+// SHORT-TERM MEMORY
+// Stores last 2 turns per session to maintain conversational continuity.
+// Uses sessionId from request body (frontend must send it).
+// Falls back to a global slot if no sessionId provided.
+// Memory is in-process only -- resets on cold start. Intentional.
+// ============================================================
+const sessionMemory = new Map();
+
+function getMemory(sessionId) {
+  return sessionMemory.get(sessionId) || {
+    interactions: [],         // up to 5 structured interaction records
+    topicCounts: {},          // tracks how many times each topic has appeared
+    struggleTopics: [],       // topics where user showed STRUGGLING signal
+    currentPath: 'unset',    // active conversation path
+    pathTurnCount: 0,         // consecutive turns on the same path
+    lastEscalatedPath: null,  // prevent double escalation in same cycle
+    // IDENTITY LAYER
+    beliefPatterns: [],       // detected repeated phrases / belief signals
+    dominantPath: null,       // most consistent path across session
+    pathCounts: {},           // count of each path used
+    escalationHistory: { count: 0, lastPath: null, lastTurn: 0 },
+    repeatedPhrases: {},      // phrases user has said more than once
+    turnCount: 0,             // total turns in session
+    // USER STATE SCHEMA
+    userState: {
+      stage: 'UNDEFINED',        // UNDEFINED | AWARE | SEEKING | ENGAGED | RESISTANT | GROWING
+      topicsEngaged: [],         // topics user has meaningfully engaged with
+      resistanceLevel: 0,        // 0-5 scale, increments on resistance signals
+      hungerLevel: 0,            // 0-5 scale, increments on hunger/growth signals
+      lastActionTaken: false,    // true when user confirms they applied something
+    },
+  };
+}
+
+// Extract a short topic label from the question
+function extractTopic(question) {
+  const lower = question.toLowerCase();
+  const topics = [
+    ['faith', ['faith', 'believe', 'belief', 'trust god']],
+    ['sin', ['sin', 'sinning', 'temptation', 'flesh', 'struggle with sin']],
+    ['salvation', ['saved', 'salvation', 'born again', 'repent', 'accept jesus']],
+    ['prayer', ['pray', 'prayer', 'talking to god', 'hearing god']],
+    ['identity', ['who am i', 'identity', 'purpose', 'calling', 'who god made']],
+    ['soul', ['soul', 'mind', 'renew', 'heart', 'inner man']],
+    ['holy spirit', ['holy spirit', 'spirit of god', 'gifts', 'walk in the spirit']],
+    ['kingdom', ['kingdom', 'kingdom of god', 'dominion', 'reign']],
+    ['relationships', ['marriage', 'family', 'relationships', 'forgive', 'offense']],
+    ['suffering', ['suffering', 'pain', 'trials', 'why does god allow', 'hard times']],
+    ['church', ['church', 'body of christ', 'pastors', 'ministry', 'hypocrites']],
+    ['obedience', ['obey', 'obedience', 'commands', 'follow god', 'discipleship']],
+    ['transformation', ['transform', 'change', 'renew', 'grow', 'sanctif']],
+    ['doubt', ['doubt', 'not sure', 'questioning', 'is god real']],
+  ];
+  for (const [label, keywords] of topics) {
+    if (keywords.some(k => lower.includes(k))) return label;
+  }
+  return 'general';
+}
+
+// Canonical repeated phrases to detect across turns
+const TRACKED_PHRASES = [
+  "i've been trying", "i've tried", "i keep", "nothing is working",
+  "nothing changes", "same thing", "it's not working", "i still",
+  "i understand but", "i know but", "i already know", "i've been doing this",
+  "i don't feel", "i feel like", "why do i keep", "i can't seem to",
+  "i want to but", "i believe but", "i try but"
+];
+
+function detectRepeatedPhrases(question, existing) {
+  const lower = question.toLowerCase();
+  const found = TRACKED_PHRASES.filter(p => lower.includes(p));
+  const newRepeats = [];
+  for (const phrase of found) {
+    const count = (existing[phrase] || 0) + 1;
+    existing[phrase] = count;
+    if (count >= 2) newRepeats.push({ phrase, count });
+  }
+  return { updated: existing, newRepeats };
+}
+
+function updateMemory(sessionId, question, answer, toneClass, issueSummary, path) {
+  const mem = getMemory(sessionId);
+  const topic = extractTopic(question);
+
+  // Increment total turn count
+  mem.turnCount = (mem.turnCount || 0) + 1;
+
+  // Build structured interaction record
+  const record = {
+    topic,
+    toneClass,
+    issueSummary,
+    path,
+    questionShort: question.slice(0, 80),
+    instructionGiven: answer.slice(0, 120),
+  };
+
+  mem.interactions.push(record);
+  if (mem.interactions.length > 5) mem.interactions.shift();
+
+  // Track topic frequency
+  mem.topicCounts[topic] = (mem.topicCounts[topic] || 0) + 1;
+
+  // Track struggle patterns
+  if (toneClass === 'STRUGGLING' && !mem.struggleTopics.includes(topic)) {
+    mem.struggleTopics.push(topic);
+  }
+
+  // Path tracking + turn counting
+  if (path !== 'unset') {
+    if (path === mem.currentPath) {
+      mem.pathTurnCount = (mem.pathTurnCount || 0) + 1;
+    } else {
+      mem.pathTurnCount = 1;
+      mem.lastEscalatedPath = null;
+    }
+    mem.currentPath = path;
+    // Track dominant path
+    mem.pathCounts = mem.pathCounts || {};
+    mem.pathCounts[path] = (mem.pathCounts[path] || 0) + 1;
+    const dominant = Object.entries(mem.pathCounts).sort((a,b) => b[1]-a[1])[0];
+    if (dominant) mem.dominantPath = dominant[0];
+  }
+
+  // Detect repeated phrases
+  mem.repeatedPhrases = mem.repeatedPhrases || {};
+  const { updated, newRepeats } = detectRepeatedPhrases(question, mem.repeatedPhrases);
+  mem.repeatedPhrases = updated;
+
+  // Track belief patterns from new repeats
+  mem.beliefPatterns = mem.beliefPatterns || [];
+  for (const r of newRepeats) {
+    if (!mem.beliefPatterns.find(b => b.phrase === r.phrase)) {
+      mem.beliefPatterns.push({ phrase: r.phrase, count: r.count, topic });
+    } else {
+      const existing = mem.beliefPatterns.find(b => b.phrase === r.phrase);
+      if (existing) existing.count = r.count;
+    }
+  }
+
+  // USER STATE UPDATES
+  // Exact transition rules:
+  // if intent === SEEKING → hungerLevel++
+  // if intent === STRUGGLING → stage = STUCK
+  // if intent === CORRECTION → resistanceLevel++
+  // if user says "I tried" but no change detected → stage = STUCK
+  // if user asks deeper follow-up question → stage = HUNGRY
+  mem.userState = mem.userState || {
+    stage: 'UNDEFINED', topicsEngaged: [], resistanceLevel: 0, hungerLevel: 0, lastActionTaken: false
+  };
+
+  // Track topics engaged
+  if (topic !== 'general' && !mem.userState.topicsEngaged.includes(topic)) {
+    mem.userState.topicsEngaged.push(topic);
+  }
+
+  const lowerQ = question.toLowerCase();
+
+  // SEEKING → hungerLevel++
+  if (toneClass === 'SEEKING') {
+    mem.userState.hungerLevel = Math.min(5, (mem.userState.hungerLevel || 0) + 1);
+  }
+
+  // STRUGGLING → stage = STUCK
+  if (toneClass === 'STRUGGLING') {
+    mem.userState.stage = 'STUCK';
+  }
+
+  // CORRECTION → resistanceLevel++
+  if (toneClass === 'CORRECTION') {
+    mem.userState.resistanceLevel = Math.min(5, (mem.userState.resistanceLevel || 0) + 1);
+  } else if (mem.userState.resistanceLevel > 0) {
+    // Slow decay when not resisting
+    mem.userState.resistanceLevel = Math.max(0, mem.userState.resistanceLevel - 0.5);
+  }
+
+  // "I tried" with no change detected → stage = STUCK
+  const saidTried = /i tried|i.ve tried|i.ve been trying|i attempted/.test(lowerQ);
+  const noChange = /nothing|still|same|doesn.t work|not working|no change/.test(lowerQ);
+  if (saidTried && noChange) {
+    mem.userState.stage = 'STUCK';
+  }
+
+  // User confirmed action taken → lastActionTaken = true
+  if (/i did|i applied|i actually did|i followed through|i started|i went|i prayed and|i read and/.test(lowerQ)) {
+    mem.userState.lastActionTaken = true;
+  } else {
+    mem.userState.lastActionTaken = false;
+  }
+
+  // Deeper follow-up question detected → stage = HUNGRY
+  const deeperSignals = /what does that mean|how does that work|what.s the next|take me deeper|tell me more|how do i apply|what should i do next|go deeper/.test(lowerQ);
+  if (deeperSignals) {
+    mem.userState.stage = 'HUNGRY';
+    mem.userState.hungerLevel = Math.min(5, (mem.userState.hungerLevel || 0) + 1);
+  }
+
+  // Final stage resolution (only override STUCK/HUNGRY if clear signal)
+  if (mem.userState.stage !== 'STUCK' && mem.userState.stage !== 'HUNGRY') {
+    const r = mem.userState.resistanceLevel;
+    const h = mem.userState.hungerLevel;
+    const topics = mem.userState.topicsEngaged.length;
+    const turns = mem.turnCount;
+
+    if (turns === 0 || !topics) {
+      mem.userState.stage = 'UNDEFINED';
+    } else if (r >= 3) {
+      mem.userState.stage = 'RESISTANT';
+    } else if (h >= 3) {
+      mem.userState.stage = 'GROWING';
+    } else if (mem.userState.lastActionTaken) {
+      mem.userState.stage = 'ENGAGED';
+    } else if (topics >= 2) {
+      mem.userState.stage = 'SEEKING';
+    } else {
+      mem.userState.stage = 'AWARE';
+    }
+  }
+
+  console.log('[Angela Davis Live USER STATE]', JSON.stringify(mem.userState));
+
+  sessionMemory.set(sessionId, mem);
+  if (sessionMemory.size > 500) {
+    const firstKey = sessionMemory.keys().next().value;
+    sessionMemory.delete(firstKey);
+  }
+
+  // Return any newly detected repeat patterns for use in response
+  return newRepeats;
+}
+
+function buildConversationContext(mem, currentQuestion) {
+  const { interactions, topicCounts, struggleTopics } = mem;
+  if (!interactions.length) return null;
+
+  const currentTopic = extractTopic(currentQuestion);
+  const priorOnTopic = interactions.filter(i => i.topic === currentTopic);
+  const topicRepeat = (topicCounts[currentTopic] || 0) >= 2;
+  const priorStruggle = struggleTopics.includes(currentTopic);
+
+  const lines = [];
+
+  // Compact interaction summary -- last 3 only, no full transcripts
+  const recent = interactions.slice(-3);
+  lines.push('PRIOR INTERACTIONS (summary only):');
+  recent.forEach((r, i) => {
+    lines.push(`[${i + 1}] Topic: ${r.topic} | State: ${r.toneClass} | Asked: "${r.questionShort}" | Told: "${r.instructionGiven}..."`);
+  });
+
+  // Behavioral signals for the prompt
+  if (topicRepeat && priorOnTopic.length) {
+    lines.push(`\nTOPIC REPEAT DETECTED: The user has returned to "${currentTopic}" ${topicCounts[currentTopic]} times.`);
+    lines.push('Do NOT repeat the same teaching angle. Build on what was already given. Go deeper.');
+    lines.push(`Last instruction on this topic: "${priorOnTopic[priorOnTopic.length-1].instructionGiven}..."`);
+  }
+
+  if (priorStruggle) {
+    lines.push(`\nSTRUGGLE PATTERN: User has previously shown struggle with "${currentTopic}".`);
+    lines.push('If this question reflects continued difficulty, reference the pattern naturally and deepen the instruction.');
+    lines.push('Example: "You\'ve been wrestling with this..." or "Since this keeps coming up..."');
+    lines.push('Use this ONLY if it fits naturally. Do NOT force it.');
+  }
+
+  // Identity layer: surface belief patterns if present
+  const patterns = (mem.beliefPatterns || []).filter(b => b.count >= 2);
+  if (patterns.length) {
+    lines.push(`\nIDENTITY PATTERNS DETECTED (user has repeated these across turns):`);
+    patterns.slice(0, 3).forEach(b => {
+      lines.push(`  - "${b.phrase}" (said ${b.count} times, usually about: ${b.topic})`);
+    });
+    lines.push('If this question repeats a pattern, surface it naturally and specifically.');
+    lines.push('Example: "You said the same thing before -- \'nothing is working.\' So either nothing changed, or nothing actually shifted in how you\'re applying it."');
+    lines.push('Keep it subtle. One reference max. Do NOT make it feel like surveillance.');
+  }
+
+  if (mem.dominantPath) {
+    lines.push(`\nDOMINANT CONVERSATION PATTERN: This user most often operates in ${mem.dominantPath} mode.`);
+  }
+
+  lines.push('\nUSAGE RULES:');
+  lines.push('- Reference prior interactions only when it adds genuine value');
+  lines.push('- Do NOT repeat what was already said');
+  lines.push('- A natural reference: "Last time..." or "Since you\'ve been working through this..."');
+  lines.push('- If nothing connects, ignore this context entirely');
+
+  return lines.join('\n');
+}
+
+// ============================================================
+// SERVER-SIDE RATE LIMITER
+// Tracks chat usage per sessionId + calendar date.
+// Enforced BEFORE any GPT call to protect cost.
+// Limits:
+//   free    = 5/day
+//   circle  = 15/day
+//   core    = 40/day
+//   premium = 100/day
+// Study session soft-lock at 20 interactions (any tier).
+// ============================================================
+const usageMap = new Map(); // sessionId -> { date, count, studyCount }
+
+const TIER_LIMITS = {
+  free: 5,
+  circle: 15,
+  core: 40,
+  premium: 100,
+};
+const STUDY_SESSION_LIMIT = 20;
+
+function checkUsage(sessionId, tier) {
+  const today = new Date().toISOString().slice(0, 10);
+  const entry = usageMap.get(sessionId) || { date: today, count: 0, studyCount: 0 };
+  if (entry.date !== today) { entry.date = today; entry.count = 0; } // reset daily
+  const limit = TIER_LIMITS[tier] || TIER_LIMITS.free;
+  const overDaily = entry.count >= limit;
+  const overStudy = entry.studyCount >= STUDY_SESSION_LIMIT;
+  return { entry, limit, overDaily, overStudy };
+}
+
+function incrementUsage(sessionId) {
+  const entry = usageMap.get(sessionId);
+  if (entry) { entry.count++; entry.studyCount++; usageMap.set(sessionId, entry); }
+}
+
+// ============================================================
+// MAIN HANDLER
+// ============================================================
+export default async function handler(req, res) {
+  try {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    const { question = '', sessionId = 'default', tier = 'free' } = req.body || {};
+    if (!question.trim()) {
+      return res.status(400).json({ error: 'Missing question' });
+    }
+
+    // RATE LIMIT CHECK — before any processing
+    const { entry, limit, overDaily, overStudy } = checkUsage(sessionId, tier);
+    usageMap.set(sessionId, entry); // ensure entry exists
+
+    if (overStudy) {
+      return res.status(429).json({
+        source: 'gp73-limit',
+        limitType: 'study_session',
+        answer: null,
+        message: "You've taken in enough for today. Growth happens when you apply what you've learned, not when you keep consuming."
+      });
+    }
+
+    if (overDaily) {
+      return res.status(429).json({
+        source: 'gp73-limit',
+        limitType: 'daily',
+        answer: null,
+        remaining: 0,
+        limit,
+        message: "You've reached the end of this study session. You've started the process, now go deeper."
+      });
+    }
+
+    // Count this request
+    incrementUsage(sessionId);
+    const remaining = limit - (entry.count + 1);
+
+    // Load short-term memory for this session
+    const sessionMem = getMemory(sessionId);
+    const conversationContext = buildConversationContext(sessionMem, question);
+
+    // STEP 1 — Check hard-coded voice responses first
+    const hardCoded = checkHardCodedResponse(question);
+    if (hardCoded) {
+      console.log('[Angela Davis Live] Hard-coded match');
+      const answer = voiceCheck(enforceDoctrine(question, hardCoded)) || hardCoded;
+      // Update state tracking even on locked answers
+      try {
+        const tc = classifyTone(question);
+        const { detectionState: ds, signal: sig } = extractUserSignal(question);
+        const ph = classifyPath(question, ds, tc, getMemory(sessionId).currentPath);
+        updateMemory(sessionId, question, answer, tc, sig, ph);
+      } catch(e) { console.warn('[Angela Davis Live] Memory update error on hard-coded:', e.message); }
+      const userStateHC = getMemory(sessionId).userState;
+      return res.status(200).json({ source: 'gp73-brain', answer, userState: userStateHC || null });
+    }
+
+    // STEP 2 — Doctrine filter (gay/same sex handled before GPT)
+    const doctrineAnswer = enforceDoctrine(question, '');
+    if (doctrineAnswer) {
+      try {
+        const tc = classifyTone(question);
+        const { detectionState: ds, signal: sig } = extractUserSignal(question);
+        const ph = classifyPath(question, ds, tc, getMemory(sessionId).currentPath);
+        updateMemory(sessionId, question, doctrineAnswer, tc, sig, ph);
+      } catch(e) { console.warn('[Angela Davis Live] Memory update error on doctrine:', e.message); }
+      const userStateDR = getMemory(sessionId).userState;
+      return res.status(200).json({ source: 'gp73-brain', answer: doctrineAnswer, userState: userStateDR || null });
+    }
+
+    // STEP 3 — Detect intent and posture
+    const intent = detectIntent(question);
+    const posture = detectPosture(question);
+    console.log('[Angela Davis Live]', { intent, posture });
+
+    // STEP 4 — Retrieve grounded teachings via match_documents() RPC
+    // Only runs on spiritual questions. Hard-coded answers already returned above.
+    let teachingContext = null;
+
+    if (intent === 'spiritual') {
+      teachingContext = await queryTeachings(question);
+      if (teachingContext) {
+        console.log('[Angela Davis Live] Teaching context retrieved, grounding response');
+      } else {
+        console.log('[Angela Davis Live] No teaching match -- voice-only fallback');
+      }
+    }
+
+    // STEP 5 — Generate response grounded in teachings
+    // teachingContext replaces generic VOICE_SYSTEM_PROMPT when available
+    // conversationContext adds last 1-2 turns for continuity -- does NOT override current question
+    const systemPrompt = intent === 'general' ? GENERAL_PROMPT : VOICE_SYSTEM_PROMPT;
+    // Pass current session memory into safeGenerate for path + escalation logic
+    const liveMem = getMemory(sessionId);
+    const currentPath = liveMem.currentPath || 'unset';
+    const { answer, toneClass, userSignal, detectionState, path, escalated } = await safeGenerate(question, systemPrompt, teachingContext, posture, conversationContext, currentPath, liveMem);
+
+    // If escalation fired, mark it so it doesn't fire again next turn
+    if (escalated) {
+      const mem = getMemory(sessionId);
+      mem.lastEscalatedPath = path;
+      sessionMemory.set(sessionId, mem);
+    }
+
+    // STEP 6 — Conversation control: decide if a follow-up question is needed
+    // Skip if system already returned an investigative question (acknowledgement/unclear_application)
+    let finalAnswer = answer;
+    if (detectionState === 'standard' && shouldAskFollowUp(userSignal, toneClass, question)) {
+      const topic = extractTopic(question);
+      // Map toneClass to follow-up table key
+      const followUpPath = path === 'RESISTANCE' ? 'RESISTANCE'
+        : path === 'HUNGER' ? 'HUNGER'
+        : toneClass === 'STRUGGLING' ? 'STRUGGLING'
+        : 'SEEKING';
+      const followUp = getFollowUp(followUpPath, topic);
+      if (followUp) {
+        finalAnswer = `${answer} ${followUp}`;
+        console.log('[Angela Davis Live FOLLOW-UP]', followUp);
+      }
+    }
+
+    // Save this turn to memory with path + identity tracking
+    const repeats = updateMemory(sessionId, question, finalAnswer, toneClass, userSignal, path);
+    if (repeats && repeats.length) {
+      console.log('[Angela Davis Live IDENTITY] Repeated patterns:', repeats.map(r => r.phrase));
+    }
+
+    const currentUserState = getMemory(sessionId).userState;
+    const currentEntry = usageMap.get(sessionId);
+    const currentRemaining = Math.max(0, (TIER_LIMITS[tier] || 5) - (currentEntry ? currentEntry.count : 1));
+    const currentStudyCount = currentEntry ? currentEntry.studyCount : 1;
+
+    // PATCH 1: At message 3 for free users, inject conversion nudge
+    const conversionNudge = (tier === 'free' && currentStudyCount === 3) ? {
+      text: "You're starting to get clarity. Now measure your understanding of this.",
+      action: 'test',
+      topic: extractTopic(question)
+    } : null;
+
+    console.log('[Angela Davis Live FINAL]', finalAnswer);
+    return res.status(200).json({
+      source: 'gp73-brain',
+      answer: finalAnswer,
+      userState: currentUserState,
+      remaining: currentRemaining,
+      studyCount: currentStudyCount,
+      conversionNudge
+    });
+
+  } catch (error) {
+    console.error('[Angela Davis Live ERROR]', error.message);
+    return res.status(500).json({
+      error: error.message,
+      answer: 'System error -- try again.',
+    });
+  }
+}
