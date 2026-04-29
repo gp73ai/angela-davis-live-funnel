@@ -3,20 +3,16 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/influencHer",
+      "destination": "/influencHer.html"
+    },
+    {
       "source": "/choose-your-path",
       "destination": "/choose-your-path.html"
     },
     {
       "source": "/dashboard",
       "destination": "/choose-your-path.html"
-    }
-  ],
-  
-  "redirects": [
-    {
-      "source": "/influencher",
-      "destination": "/influencHer",
-      "permanent": true
     }
   ]
 }
