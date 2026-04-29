@@ -231,10 +231,21 @@
       margin-bottom: 56px;
       font-size: 1rem;
     }
+    /* Speaker layout: secondary | PRIMARY | secondary */
     .speakers-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 32px;
+      grid-template-columns: 1fr 1.35fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .speakers-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      /* Angela first on mobile */
+      .speaker-card.primary { order: -1; }
     }
     .speaker-card {
       background: var(--dark3);
@@ -253,27 +264,48 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--pink), var(--pink-light));
+      background: linear-gradient(90deg, rgba(255,45,141,0.3), rgba(255,128,191,0.3));
+    }
+    /* PRIMARY (Angela) card overrides */
+    .speaker-card.primary {
+      border-color: var(--pink);
+      box-shadow: 0 0 40px rgba(255, 45, 141, 0.25);
+    }
+    .speaker-card.primary::before {
+      height: 4px;
+      background: linear-gradient(90deg, var(--pink), var(--pink-light), var(--pink));
+    }
+    .speaker-card.primary .speaker-info {
+      padding: 28px 28px 32px;
+    }
+    .speaker-card.primary .speaker-name {
+      font-size: 1.6rem;
+    }
+    .speaker-card.primary .speaker-title {
+      font-size: 0.9rem;
+    }
+    .speaker-card.primary .speaker-quote {
+      font-size: 1rem;
+    }
+    .primary-badge {
+      display: inline-block;
+      background: var(--pink);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 10px;
     }
     .speaker-img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
+      object-position: center top;
       display: block;
       background: #222;
-    }
-    .speaker-img-placeholder {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .speaker-img-placeholder svg {
-      width: 80px;
-      height: 80px;
-      opacity: 0.3;
     }
     .speaker-info {
       padding: 24px;
@@ -781,6 +813,33 @@
 </section>
 
 <!-- ===========================
+     VIDEO SECTION
+=========================== -->
+<section id="video-preview" style="background:#000; padding: 80px 24px; border-top: 1px solid rgba(255,45,141,0.12);">
+  <div class="container" style="max-width: 900px;">
+    <p class="section-label" style="text-align:center;">Experience the Room</p>
+    <h2 style="font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; text-align: center; margin-bottom: 14px;">
+      Step Into The Room<br><span class="pink">Before You Get There</span>
+    </h2>
+    <p style="text-align:center; color:#aaa; font-size:1rem; max-width:560px; margin: 0 auto 40px;">
+      Watch what happens when women show up ready for more.
+    </p>
+    <!-- 16:9 responsive video container -->
+    <div style="position: relative; width: 100%; padding-bottom: 56.25%; background: #0d0d0d; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,45,141,0.2); box-shadow: 0 8px 48px rgba(0,0,0,0.6);">
+      <iframe
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+        width="100%" height="100%"
+        src="https://www.youtube.com/embed/VIDEO_ID_HERE"
+        title="InfluencHer Conference"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
      SPEAKERS
 =========================== -->
 <section id="speakers" class="section">
@@ -789,49 +848,51 @@
     <h2>The Women God <span class="pink">Sent to You</span></h2>
     <p class="section-sub">Three anointed women. Three distinct assignments. One unforgettable weekend.</p>
 
+    <!--
+      Grid order: LEFT secondary | CENTER primary | RIGHT secondary
+      On mobile: primary (Angela) floats to top via order:-1
+    -->
     <div class="speakers-grid">
 
-      <!-- Speaker 1 -->
+      <!-- LEFT — Apostle Yolanda Kuykendall -->
       <div class="speaker-card">
-        <div class="speaker-img-placeholder">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="38" r="22" fill="#fff"/>
-            <ellipse cx="50" cy="80" rx="32" ry="20" fill="#fff"/>
-          </svg>
-        </div>
+        <img
+          src="/images/apostleyolandalean.jpg"
+          alt="Apostle Yolanda Kuykendall"
+          class="speaker-img"
+        />
         <div class="speaker-info">
-          <div class="speaker-name">Speaker Name</div>
-          <div class="speaker-title">Pastor · Author · Founder</div>
-          <p class="speaker-quote">"She doesn't just preach — she unlocks rooms."</p>
-        </div>
-      </div>
-
-      <!-- Speaker 2 -->
-      <div class="speaker-card">
-        <div class="speaker-img-placeholder">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="38" r="22" fill="#fff"/>
-            <ellipse cx="50" cy="80" rx="32" ry="20" fill="#fff"/>
-          </svg>
-        </div>
-        <div class="speaker-info">
-          <div class="speaker-name">Speaker Name</div>
-          <div class="speaker-title">Evangelist · Speaker · Leader</div>
+          <div class="speaker-name">Apostle Yolanda Kuykendall</div>
+          <div class="speaker-title">Speaker &amp; Leader</div>
           <p class="speaker-quote">"Every woman in the room walks out different."</p>
         </div>
       </div>
 
-      <!-- Speaker 3 -->
-      <div class="speaker-card">
-        <div class="speaker-img-placeholder">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="38" r="22" fill="#fff"/>
-            <ellipse cx="50" cy="80" rx="32" ry="20" fill="#fff"/>
-          </svg>
-        </div>
+      <!-- CENTER — Apostle Angela Davis (PRIMARY) -->
+      <div class="speaker-card primary">
+        <img
+          src="/images/apostleangelaorange.jpg"
+          alt="Apostle Angela Davis"
+          class="speaker-img"
+        />
         <div class="speaker-info">
-          <div class="speaker-name">Speaker Name</div>
-          <div class="speaker-title">Worship Leader · Prophetic Voice</div>
+          <div class="primary-badge">✦ Host &amp; Founder</div>
+          <div class="speaker-name">Apostle Angela Davis</div>
+          <div class="speaker-title">Author &amp; Founder</div>
+          <p class="speaker-quote">"She doesn't just preach — she unlocks rooms."</p>
+        </div>
+      </div>
+
+      <!-- RIGHT — Pastor Angel Hicks -->
+      <div class="speaker-card">
+        <img
+          src="/images/pastorangelside.jpg"
+          alt="Pastor Angel Hicks"
+          class="speaker-img"
+        />
+        <div class="speaker-info">
+          <div class="speaker-name">Pastor Angel Hicks</div>
+          <div class="speaker-title">Prophetic Voice &amp; Worship Leader</div>
           <p class="speaker-quote">"The atmosphere shifts when she enters the building."</p>
         </div>
       </div>
