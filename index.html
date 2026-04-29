@@ -695,14 +695,12 @@
 <!-- ─── NAV ─── -->
 <nav>
   <div class="nav-brand">
-    <img src="/bible.png" alt="Bible" />
-    <img src="/GPlogo.png" alt="GP" />
     <div class="nav-brand-name">Angela Davis Live</div>
   </div>
   <div class="nav-links">
     <a href="https://stan.store/iamgodsprisoner" target="_blank">Resources</a>
     <a href="https://stan.store/iamgodsprisoner/p/join-the-discipleship-circle" target="_blank">Discipleship</a>
-    <a href="/choose-your-path">Dashboard</a>
+    <a href="/choose-your-path">Choose Your Path</a>
     <a href="https://stan.store/iamgodsprisoner" target="_blank" class="nav-cta">Get Access →</a>
   </div>
 </nav>
@@ -1086,8 +1084,12 @@
   // ── CHAT ──────────────────────────────────────────────────────────────────
   function fillAndAsk(question) {
     const input = document.getElementById('q');
+    if (!input) return;
     input.value = question;
     input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    input.focus();
+    // Auto-submit after a brief moment so the user sees what was filled
+    setTimeout(function() { ask(); }, 300);
   }
 
   let isLoading = false;
