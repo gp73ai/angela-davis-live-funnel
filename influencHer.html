@@ -817,6 +817,128 @@
 </section>
 
 <!-- ===========================
+     EARLY BIRD OFFER
+=========================== -->
+<section id="early-bird" style="background: linear-gradient(135deg, #1a0a10 0%, #0d0515 100%); padding: 80px 24px; border-top: 2px solid rgba(255, 45, 141, 0.3); border-bottom: 2px solid rgba(255, 45, 141, 0.3); position: relative; overflow: hidden;">
+  <!-- Subtle glow effect -->
+  <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 50% 50%, rgba(255, 45, 141, 0.12) 0%, transparent 70%); pointer-events: none;"></div>
+  
+  <div class="container" style="max-width: 900px; position: relative; z-index: 1; text-align: center;">
+    
+    <!-- Badge -->
+    <div style="display: inline-block; background: rgba(255, 45, 141, 0.2); color: #ff2d8d; padding: 8px 24px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; border: 1px solid rgba(255, 45, 141, 0.4);">
+      Limited Seats
+    </div>
+
+    <!-- Headline -->
+    <h2 style="font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; color: #ffffff; margin-bottom: 12px; letter-spacing: -0.02em; line-height: 1.15;">
+      Early Bird Access
+    </h2>
+
+    <!-- Subheadline -->
+    <p style="font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(255, 255, 255, 0.85); margin-bottom: 36px; line-height: 1.6; max-width: 700px; margin-left: auto; margin-right: auto;">
+      Join women from across South Georgia and North Florida<br>
+      for a transformational weekend experience.
+    </p>
+
+    <!-- Countdown Timer -->
+    <div id="earlybird-countdown" style="display: flex; justify-content: center; gap: 16px; margin-bottom: 36px; flex-wrap: wrap;">
+      <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255, 45, 141, 0.3); border-radius: 10px; padding: 16px 20px; min-width: 80px; text-align: center;">
+        <span id="eb-days" style="font-size: 2.4rem; font-weight: 900; color: #ff2d8d; display: block; line-height: 1; font-variant-numeric: tabular-nums;">--</span>
+        <span style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; display: block; margin-top: 6px;">Days</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255, 45, 141, 0.3); border-radius: 10px; padding: 16px 20px; min-width: 80px; text-align: center;">
+        <span id="eb-hours" style="font-size: 2.4rem; font-weight: 900; color: #ff2d8d; display: block; line-height: 1; font-variant-numeric: tabular-nums;">--</span>
+        <span style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; display: block; margin-top: 6px;">Hours</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255, 45, 141, 0.3); border-radius: 10px; padding: 16px 20px; min-width: 80px; text-align: center;">
+        <span id="eb-minutes" style="font-size: 2.4rem; font-weight: 900; color: #ff2d8d; display: block; line-height: 1; font-variant-numeric: tabular-nums;">--</span>
+        <span style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; display: block; margin-top: 6px;">Minutes</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255, 45, 141, 0.3); border-radius: 10px; padding: 16px 20px; min-width: 80px; text-align: center;">
+        <span id="eb-seconds" style="font-size: 2.4rem; font-weight: 900; color: #ff2d8d; display: block; line-height: 1; font-variant-numeric: tabular-nums;">--</span>
+        <span style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; display: block; margin-top: 6px;">Seconds</span>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 32px; margin-bottom: 20px; flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em;">General Admission</div>
+        <div style="font-size: 2.8rem; font-weight: 900; color: #ff2d8d; line-height: 1;">$40</div>
+        <div style="font-size: 1.1rem; color: rgba(255, 255, 255, 0.4); text-decoration: line-through; margin-top: 4px;">$50</div>
+      </div>
+      <div style="font-size: 2rem; color: rgba(255, 255, 255, 0.25);">|</div>
+      <div style="text-align: center;">
+        <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em;">VIP Access</div>
+        <div style="font-size: 2.8rem; font-weight: 900; color: #ff2d8d; line-height: 1;">$65</div>
+        <div style="font-size: 1.1rem; color: rgba(255, 255, 255, 0.4); text-decoration: line-through; margin-top: 4px;">$75</div>
+      </div>
+    </div>
+
+    <!-- Limit text -->
+    <p style="font-size: 1rem; color: rgba(255, 255, 255, 0.65); margin-bottom: 32px; font-style: italic;">
+      First 30 tickets only
+    </p>
+
+    <!-- CTA Button -->
+    <a href="https://brushfire.com/angeladavislive/influencherwc2026/630262?utm_source=website&utm_medium=earlybird&utm_campaign=kingdom100" 
+       class="btn btn-primary" 
+       target="_blank"
+       rel="noopener noreferrer"
+       style="display: inline-block; font-size: 1.15rem; padding: 20px 48px; box-shadow: 0 6px 32px rgba(255, 45, 141, 0.4);">
+      Claim My Early Bird Seat
+    </a>
+
+    <!-- Code reminder -->
+    <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); margin-top: 20px;">
+      Use code <strong style="color: #ff2d8d; font-weight: 800; letter-spacing: 0.08em;">KINGDOM100</strong> at checkout
+    </p>
+
+  </div>
+</section>
+
+<script>
+// Early Bird Countdown Timer (May 31, 2026 midnight EDT)
+(function() {
+  var targetDate = new Date('2026-05-31T23:59:59-04:00');
+  var section = document.getElementById('early-bird');
+  
+  function pad(n) { return n < 10 ? '0' + n : n; }
+  
+  function updateEarlyBirdCountdown() {
+    var now = new Date();
+    var difference = targetDate - now;
+    
+    if (difference <= 0) {
+      // Expired - replace with message
+      section.innerHTML = '<div class="container" style="max-width: 900px; text-align: center; padding: 40px 20px;"><p style="font-size: 1.15rem; color: rgba(255, 255, 255, 0.8); margin: 0;">Early Bird access has ended. Secure your seat before July 17.</p></div>';
+      return;
+    }
+    
+    var days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    
+    var daysEl = document.getElementById('eb-days');
+    var hoursEl = document.getElementById('eb-hours');
+    var minutesEl = document.getElementById('eb-minutes');
+    var secondsEl = document.getElementById('eb-seconds');
+    
+    if (daysEl) daysEl.textContent = pad(days);
+    if (hoursEl) hoursEl.textContent = pad(hours);
+    if (minutesEl) minutesEl.textContent = pad(minutes);
+    if (secondsEl) secondsEl.textContent = pad(seconds);
+  }
+  
+  updateEarlyBirdCountdown();
+  setInterval(updateEarlyBirdCountdown, 1000);
+})();
+</script>
+
+
+<!-- ===========================
      VIDEO SECTION
 =========================== -->
 <section id="video-preview" style="background:#000; padding: 80px 24px; border-top: 1px solid rgba(255,45,141,0.12);">
