@@ -104,7 +104,7 @@ blockquote cite{display:block;margin-top:10px;font-family:var(--sans);font-style
 .inf h2.title{font-family:var(--sans);font-weight:800;letter-spacing:-.02em}
 .inf h2.title span{color:var(--pink)}
 .inf .photo{border-radius:28px;background:#fff;padding:14px;box-shadow:0 0 0 2px var(--pink-light),0 30px 60px rgba(255,45,141,.22)}
-.inf .photo img{border-radius:18px}
+.inf .photo img{border-radius:18px;width:100%;height:auto;aspect-ratio:5/6;object-fit:cover;object-position:50% 20%}
 .leave{list-style:none;margin:30px 0 38px;display:grid;gap:4px}
 .leave li{display:flex;align-items:baseline;gap:18px;padding:14px 0;border-bottom:1px solid rgba(216,27,114,.18);font-weight:700;font-size:1.25rem}
 .leave li small{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--pink-deep);font-size:1rem;min-width:28px}
@@ -126,6 +126,13 @@ blockquote cite{display:block;margin-top:10px;font-family:var(--sans);font-style
 .qs a:hover{border-color:var(--pink);transform:translateX(4px)}
 .qs a::after{content:"→";color:var(--pink-deep)}
 
+
+/* watch (YouTube) */
+.watch .head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-bottom:40px}
+.watch .player{position:relative;border-radius:28px;background:#fff;padding:14px;box-shadow:0 0 0 2px var(--pink-light),0 30px 60px rgba(255,45,141,.18)}
+.watch .player .frame{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:var(--plum)}
+.watch .player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.watch .ctas{display:flex;gap:14px;flex-wrap:wrap}
 /* shared calling */
 .shared .wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .shared .photo{border-radius:28px;overflow:hidden;background:#111;box-shadow:0 30px 60px rgba(42,10,30,.18)}
@@ -269,7 +276,7 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
    </div>
    <p class="note">InfluencHer 2026 was held July 17 to 19 in Thomasville, Georgia. Next dates to be announced.</p>
   </div>
-  <div class="photo"><img src="/author/assets/apostleangelaorange.jpg" alt="Apostle Angela Davis, host and founder of InfluencHer"></div>
+  <div class="photo"><img src="/author/assets/angela-speaking-stage.jpg" alt="Apostle Angela Davis speaking on stage at InfluencHer" width="1000" height="1200"></div>
  </div>
 </section>
 
@@ -277,9 +284,9 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
  <div class="wrap">
   <div>
    <div class="eyebrow">Speaking</div>
-   <h2 class="title">Invite Angela to <em>your gathering.</em></h2>
-   <p class="body">Conferences, women's gatherings and church events. Angela brings Scripture-based teaching that moves women from confusion to clarity and into their assignment.</p>
-   <div style="margin-top:34px"><a class="btn btn-glow" href="mailto:AngelaDavisLive@gmail.com?subject=Speaking%20request%20for%20Apostle%20Angela%20Davis">Request Angela to Speak</a></div>
+   <h2 class="title">Invite Apostle Angela to <em>your gathering.</em></h2>
+   <p class="body">Conferences, women's gatherings and church events. Apostle Angela brings Scripture-based teaching that moves women from confusion to clarity and into their assignment.</p>
+   <div style="margin-top:34px"><a class="btn btn-glow" href="mailto:AngelaDavisLive@gmail.com?subject=Speaking%20request%20for%20Apostle%20Angela%20Davis">Request Apostle Angela to Speak</a></div>
    <p class="note">Requests go to AngelaDavisLive@gmail.com.</p>
   </div>
   <div class="topics">
@@ -313,9 +320,26 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
   <div>
    <div class="eyebrow">A Shared Calling</div>
    <h2 class="title">Writing and teaching <em>together.</em></h2>
-   <p class="body">Angela writes alongside Sedrick Davis for believers who are ready to trade religious performance for the truth of the Word. Their books are published together by Iron Pen Publishing.</p>
-   <div style="margin-top:34px"><a class="btn btn-plum" href="https://www.youtube.com/@iamgodsprisoner">Watch Sedrick's Teaching</a></div>
+   <p class="body">Written by Apostle Angela alongside Sedrick Davis for believers who are ready to trade religious performance for the truth of the Word. Their books are published together by Iron Pen Publishing.</p>
+   <div style="margin-top:34px"><a class="btn btn-plum" href="https://www.youtube.com/@angeladavislive" target="_blank" rel="noopener">Watch Angela's Teaching</a></div>
   </div>
+ </div>
+</section>
+
+<section class="watch bg-blush" id="watch">
+ <div class="wrap">
+  <div class="head">
+   <div>
+    <div class="eyebrow">Watch Apostle Angela</div>
+    <h2 class="title">Teaching you can <em>take with you.</em></h2>
+    <p class="body">Messages and moments from Apostle Angela's ministry, straight from her YouTube channel. New videos appear here as soon as they are posted.</p>
+   </div>
+   <div class="ctas">
+    <a class="btn btn-glow" href="https://www.youtube.com/@angeladavislive" target="_blank" rel="noopener">Watch on YouTube</a>
+    <a class="btn btn-plum" href="https://www.youtube.com/@angeladavislive?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a>
+   </div>
+  </div>
+  <div class="player"><div class="frame"><iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=UUfyV5Zr5_lsMPgCZVW4VbYQ&rel=0" title="Apostle Angela Davis on YouTube" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div></div>
  </div>
 </section>
 
@@ -323,8 +347,8 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
  <div class="wrap">
   <div class="grid">
    <div><div class="brand">Angela <em>Davis</em></div><p>Apostle, author, speaker and founder of InfluencHer. Scripture-based teaching for women who want to grow with purpose, depth and clarity.</p></div>
-   <div><h4>Explore</h4><a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a></div>
-   <div><h4>Connect</h4><a href="https://angeladavislive.com">Angela Davis Live</a><a href="https://angeladavislive.com/influencHer">InfluencHer Conference</a><a href="mailto:AngelaDavisLive@gmail.com">AngelaDavisLive@gmail.com</a></div>
+   <div><h4>Explore</h4><a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#watch">Watch</a></div>
+   <div><h4>Connect</h4><a href="https://angeladavislive.com">Angela Davis Live</a><a href="https://angeladavislive.com/influencHer">InfluencHer Conference</a><a href="https://www.youtube.com/@angeladavislive" target="_blank" rel="noopener">YouTube</a><a href="mailto:AngelaDavisLive@gmail.com">AngelaDavisLive@gmail.com</a></div>
   </div>
   <div class="legal">© 2026 Angela Davis. Books published by Iron Pen Publishing.</div>
  </div>
