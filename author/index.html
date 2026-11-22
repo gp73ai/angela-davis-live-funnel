@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostle Angela Davis | Author, Speaker, Founder of InfluencHer</title>
+<meta name="description" content="Apostle Angela Davis: author, speaker and founder of InfluencHer. Scripture-based teaching for women who want to grow with purpose, depth and clarity.">
+<!-- LOCAL BUILD ONLY. Not deployed. Book links go to the Iron Pen Publishing Shopify store once titles are published (see STORE_LIVE below). -->
+<style>
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-400-normal.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-400-italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-600-normal.woff2) format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-600-italic.woff2) format('woff2');font-weight:600;font-style:italic;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-700-normal.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(/author/assets/fonts/playfair-display-latin-700-italic.woff2) format('woff2');font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:'DM Sans';src:url(/author/assets/fonts/dm-sans-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'DM Sans';src:url(/author/assets/fonts/dm-sans-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'DM Sans';src:url(/author/assets/fonts/dm-sans-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'DM Sans';src:url(/author/assets/fonts/dm-sans-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+
+:root{
+ --plum:#2a0a1e; --plum-soft:#5a3a4c; --pink:#ff2d8d; --pink-deep:#d81b72; --pink-light:#ff80bf;
+ --blush:#fdf0f5; --blush-2:#fae3ec; --ivory:#fffaf8; --line:#f1d3e0;
+ --serif:'Playfair Display',Georgia,serif; --sans:'DM Sans','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--plum);background:var(--ivory);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.eyebrow{font-family:var(--sans);font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
+h2.title{font-family:var(--serif);font-weight:600;font-size:clamp(2.3rem,4vw,3.4rem);line-height:1.12;margin:14px 0 18px;letter-spacing:-.01em}
+h2.title em{font-style:italic;color:var(--pink-deep)}
+p.body{font-size:1.1rem;color:var(--plum-soft);max-width:620px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:17px 32px;border-radius:999px;font-family:var(--sans);font-weight:600;font-size:1.02rem;letter-spacing:.01em;transition:transform .15s,background .15s,box-shadow .15s;cursor:pointer;border:0}
+.btn:hover{transform:translateY(-2px)}
+.btn-glow{background:var(--pink);color:#fff;box-shadow:0 12px 30px rgba(255,45,141,.38)}
+.btn-glow:hover{background:var(--pink-deep)}
+.btn-plum{border:2px solid var(--plum);color:var(--plum);background:transparent}
+.btn-plum:hover{background:var(--plum);color:#fff}
+.btn-sm{padding:12px 20px;font-size:.92rem}
+section{padding:120px 0}
+.bg-ivory{background:var(--ivory)} .bg-blush{background:var(--blush)} .bg-white{background:#fff}
+
+/* header */
+header{position:sticky;top:0;z-index:30;background:rgba(255,250,248,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:84px}
+.brand{font-family:var(--serif);font-size:1.6rem;font-weight:600;letter-spacing:.01em}
+.brand em{font-style:italic;color:var(--pink-deep)}
+.links{display:flex;gap:34px;font-size:1.02rem;font-weight:500}
+.links a{position:relative;padding:6px 0}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--pink);transform:scaleX(0);transition:transform .2s}
+.links a:hover::after{transform:scaleX(1)}
+.nav .btn{padding:12px 24px;font-size:.95rem}
+.menu-btn{display:none;background:none;border:0;font-size:1.7rem;color:var(--plum)}
+.mobile-menu{display:none}
+
+/* hero */
+.hero{position:relative;background:#f9e1eb url('/author/assets/hero-atelier-blush.jpg') left center/cover no-repeat;overflow:hidden;padding:0}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:24px;min-height:min(88vh,820px);max-width:1360px}
+.hero-photo{align-self:end;display:flex;justify-content:center;position:relative}
+.hero-photo img{position:relative;height:min(84vh,790px);width:auto;filter:drop-shadow(0 34px 44px rgba(90,10,50,.22))}
+.hero-copy{padding:70px 0 80px 8px}
+.pill{display:inline-block;background:#fff;color:var(--pink-deep);border:1px solid var(--line);font-weight:700;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;padding:9px 20px;border-radius:999px;box-shadow:0 6px 18px rgba(216,27,114,.12)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(3rem,5.4vw,5.4rem);line-height:1.04;letter-spacing:-.015em;margin:26px 0 24px;color:var(--plum)}
+.hero h1 em{font-style:italic;font-weight:600;color:var(--pink-deep)}
+.hero .lead{font-size:1.24rem;line-height:1.65;color:var(--plum-soft);max-width:520px}
+.hero .ctas{display:flex;gap:16px;flex-wrap:wrap;margin-top:38px}
+.hero .sig{margin-top:40px;padding-top:24px;border-top:1px solid rgba(42,10,30,.14);font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--plum-soft)}
+
+/* books */
+.books{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 36px}
+.book{display:flex;flex-direction:column}
+.book .cover{background:linear-gradient(160deg,#fff,var(--blush-2));border-radius:20px;padding:40px 30px;display:flex;justify-content:center;transition:transform .25s,box-shadow .25s}
+.book:hover .cover{transform:translateY(-4px);box-shadow:0 24px 50px rgba(216,27,114,.14)}
+.book .cover img{height:340px;width:auto;box-shadow:0 18px 34px rgba(42,10,30,.28);border-radius:3px}
+.book .series{margin-top:22px;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-deep);font-weight:700;min-height:1.2em}
+.book h3{font-family:var(--serif);font-weight:600;font-size:1.55rem;line-height:1.2;margin:6px 0 6px}
+.book .sub{font-family:var(--serif);font-style:italic;color:var(--plum-soft);font-size:1.02rem}
+.book .by{font-size:.92rem;color:var(--plum-soft);margin-top:8px}
+.book .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.book .price{font-weight:700;font-size:1.05rem}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:.88rem;font-weight:600;color:var(--plum-soft);background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 16px}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink-light)}
+.formats{font-size:.88rem;color:var(--plum-soft)}
+.store-note{margin-top:46px;font-size:1rem;color:var(--plum-soft);text-align:center}
+
+/* about */
+.about .wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:80px;align-items:center}
+.about .portrait{border-radius:28px;overflow:hidden;box-shadow:0 30px 60px rgba(42,10,30,.14)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+.fact{border-top:2px solid var(--pink);padding-top:14px}
+.fact b{display:block;font-family:var(--serif);font-size:1.25rem;font-weight:600}
+.fact span{font-size:.95rem;color:var(--plum-soft)}
+blockquote{margin-top:34px;font-family:var(--serif);font-style:italic;font-size:1.4rem;line-height:1.5;color:var(--plum);padding-left:24px;border-left:3px solid var(--pink)}
+blockquote cite{display:block;margin-top:10px;font-family:var(--sans);font-style:normal;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:var(--plum-soft)}
+
+/* influencher (light rendition of the conference brand) */
+.inf{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff 0%,#ffe6f1 55%,#ffd3e6 100%)}
+.inf::after{content:"";position:absolute;right:-160px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,45,141,.18),transparent 70%)}
+.inf .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:center;position:relative;z-index:1}
+.inf h2.title{font-family:var(--sans);font-weight:800;letter-spacing:-.02em}
+.inf h2.title span{color:var(--pink)}
+.inf .photo{border-radius:28px;background:#fff;padding:14px;box-shadow:0 0 0 2px var(--pink-light),0 30px 60px rgba(255,45,141,.22)}
+.inf .photo img{border-radius:18px}
+.leave{list-style:none;margin:30px 0 38px;display:grid;gap:4px}
+.leave li{display:flex;align-items:baseline;gap:18px;padding:14px 0;border-bottom:1px solid rgba(216,27,114,.18);font-weight:700;font-size:1.25rem}
+.leave li small{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--pink-deep);font-size:1rem;min-width:28px}
+.leave li span{color:var(--pink-deep)}
+.inf .ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.note{font-size:.9rem;color:var(--plum-soft);margin-top:16px}
+
+/* speaking */
+.speaking .wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
+.topics{display:grid;gap:16px}
+.topic{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 26px}
+.topic b{font-family:var(--serif);font-weight:600;font-size:1.25rem;display:block;margin-bottom:4px}
+.topic span{color:var(--plum-soft);font-size:1rem}
+
+/* live */
+.live .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:center}
+.qs{display:grid;gap:14px}
+.qs a{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 24px;font-weight:600;font-size:1.05rem;transition:border-color .15s,transform .15s}
+.qs a:hover{border-color:var(--pink);transform:translateX(4px)}
+.qs a::after{content:"→";color:var(--pink-deep)}
+
+/* shared calling */
+.shared .wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.shared .photo{border-radius:28px;overflow:hidden;background:#111;box-shadow:0 30px 60px rgba(42,10,30,.18)}
+
+/* footer */
+footer{background:var(--blush-2);color:var(--plum);padding:80px 0 36px;border-top:1px solid var(--line)}
+footer .grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:50px}
+footer .brand{font-size:1.8rem}
+footer p{color:var(--plum-soft);margin-top:12px;max-width:380px}
+footer h4{font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--pink-deep);margin-bottom:14px}
+footer a{display:block;padding:5px 0;color:var(--plum-soft)}
+footer a:hover{color:var(--pink-deep)}
+footer .legal{border-top:1px solid var(--line);margin-top:56px;padding-top:24px;font-size:.85rem;color:var(--plum-soft)}
+
+/* modal for unpublished titles */
+dialog{border:0;border-radius:24px;padding:0;max-width:560px;width:92vw;box-shadow:0 40px 80px rgba(42,10,30,.3)}
+dialog::backdrop{background:rgba(42,10,30,.45)}
+.dlg{display:grid;grid-template-columns:150px 1fr;gap:26px;padding:30px}
+.dlg img{width:150px;box-shadow:0 12px 24px rgba(42,10,30,.25)}
+.dlg h3{font-family:var(--serif);font-size:1.5rem;line-height:1.2}
+.dlg p{font-size:.98rem;color:var(--plum-soft);margin-top:8px}
+.dlg .close{margin-top:18px}
+
+/* responsive */
+@media (max-width:1000px){
+ .links,.nav .btn{display:none}.menu-btn{display:block}
+ .mobile-menu.open{display:grid;gap:4px;padding:10px 32px 24px;background:var(--ivory);border-bottom:1px solid var(--line)}
+ .mobile-menu a{padding:12px 0;font-size:1.1rem;font-weight:500;border-bottom:1px solid var(--line)}
+ .hero{background-position:25% center}
+ .hero .wrap{grid-template-columns:1fr;min-height:auto;gap:0;padding-top:8px}
+ .hero-photo img{height:auto;width:min(84vw,380px)}
+ .hero-copy{padding:10px 0 56px}
+ .hero h1{font-size:clamp(2.5rem,10.5vw,3.4rem);margin:18px 0 16px}
+ .hero .lead{font-size:1.1rem}
+ .hero .ctas{margin-top:26px}
+ section{padding:80px 0}
+ .books{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 18px}
+ .book .cover{padding:24px 14px}.book .cover img{height:220px}
+ .book h3{font-size:1.2rem}.book .sub{font-size:.92rem}
+ .about .wrap,.inf .wrap,.speaking .wrap,.live .wrap,.shared .wrap{grid-template-columns:1fr;gap:44px}
+ .facts{grid-template-columns:1fr 1fr}
+ footer .grid{grid-template-columns:1fr;gap:30px}
+}
+@media (max-width:480px){
+ body{font-size:17px}
+ .wrap{padding:0 22px}
+ .nav{height:70px}.brand{font-size:1.4rem}
+ .hero-photo{height:318px;overflow:hidden;align-items:flex-start}
+ .hero-photo img{width:min(76vw,296px);filter:none}
+ .hero-copy{padding-top:14px}
+ .pill{font-size:.66rem;padding:7px 14px;letter-spacing:.16em}
+ .hero .lead{font-size:1.02rem;line-height:1.55}
+ .hero h1{margin:12px 0 10px;font-size:2.35rem;line-height:1.06}
+ .hero .ctas{margin-top:18px;gap:10px}
+ .hero .ctas .btn{flex:1 1 100%}
+ .hero .sig{margin-top:30px}
+ .book .cover img{height:180px}
+ .book .row{gap:8px}.status{font-size:.8rem;padding:7px 12px}
+ .facts{grid-template-columns:1fr}
+ .leave li{display:block;font-size:1.12rem}.leave li small{margin-right:10px}
+ .book .series{font-size:.68rem;letter-spacing:.12em}
+ .book .row .status{display:none}
+ .dlg{grid-template-columns:1fr;text-align:left}.dlg img{width:120px}
+ .btn{padding:16px 26px}
+}
+</style>
+</head>
+<body>
+<header>
+ <div class="wrap nav">
+  <a class="brand" href="#top">Angela <em>Davis</em></a>
+  <nav class="links">
+   <a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
+  </nav>
+  <a class="btn btn-glow" href="#books">Shop Books</a>
+  <button class="menu-btn" aria-label="Open menu" onclick="document.getElementById('mm').classList.toggle('open')">&#9776;</button>
+ </div>
+ <nav class="mobile-menu" id="mm" onclick="this.classList.remove('open')">
+  <a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
+ </nav>
+</header>
+
+<section class="hero" id="top">
+ <div class="wrap">
+  <div class="hero-photo"><img src="/author/assets/angela-hero-cutout.png" alt="Apostle Angela Davis" width="575" height="1039"></div>
+  <div class="hero-copy">
+   <span class="pill">Apostle · Author · Speaker</span>
+   <h1>Step Into Who God <em>Called You</em> to Be.</h1>
+   <p class="lead">Scripture-based understanding for women who want to grow with purpose, depth and clarity, not confusion.</p>
+   <div class="ctas">
+    <a class="btn btn-glow" href="#books">Explore Her Books</a>
+    <a class="btn btn-plum" href="#influencher">Discover InfluencHer</a>
+   </div>
+   <div class="sig">Real answers. Real growth. Real clarity.</div>
+  </div>
+ </div>
+</section>
+
+<section class="bg-blush" id="books">
+ <div class="wrap">
+  <div style="text-align:center;max-width:760px;margin:0 auto 64px">
+   <div class="eyebrow">The Books</div>
+   <h2 class="title">Read it privately. <em>Examine it honestly.</em></h2>
+   <p class="body" style="margin:0 auto">Written with Sedrick Davis and published by Iron Pen Publishing. Paperbacks are printed on demand and shipped to your door.</p>
+  </div>
+  <div class="books" id="bookGrid"></div>
+  <p class="store-note" id="storeNote"></p>
+ </div>
+</section>
+
+<section class="about bg-ivory" id="about">
+ <div class="wrap">
+  <div class="portrait"><img src="/author/assets/about-portrait.jpg" alt="Apostle Angela Davis"></div>
+  <div>
+   <div class="eyebrow">About Angela</div>
+   <h2 class="title">A teacher who <em>unlocks destinies.</em></h2>
+   <p class="body">Apostle Angela Davis is an author, speaker and the founder and host of the InfluencHer Women's Conference. Through Angela Davis Live she helps women understand the Word for themselves and grow with purpose, depth and clarity.</p>
+   <div class="facts">
+    <div class="fact"><b>Author</b><span>Iron Pen Publishing</span></div>
+    <div class="fact"><b>Founder</b><span>InfluencHer Women's Conference</span></div>
+    <div class="fact"><b>Host</b><span>Angela Davis Live</span></div>
+   </div>
+   <blockquote>"She doesn't just teach, she unlocks destinies."<cite>InfluencHer Women's Conference</cite></blockquote>
+  </div>
+ </div>
+</section>
+
+<section class="inf" id="influencher">
+ <div class="wrap">
+  <div>
+   <div class="eyebrow">Host &amp; Founder</div>
+   <h2 class="title"><span>Influenc</span>Her Women's Conference</h2>
+   <p class="body">You've been showing up for everyone else. InfluencHer is where you step into who God called you to be. Three days. Three voices. One assignment.</p>
+   <ul class="leave">
+    <li><small>01</small>You'll leave <span>Knowing Who You Are</span></li>
+    <li><small>02</small>You'll leave <span>Healed</span></li>
+    <li><small>03</small>You'll leave <span>Activated</span></li>
+   </ul>
+   <div class="ctas">
+    <a class="btn btn-glow" href="https://angeladavislive.com/influencHer">Visit the Conference Site</a>
+   </div>
+   <p class="note">InfluencHer 2026 was held July 17 to 19 in Thomasville, Georgia. Next dates to be announced.</p>
+  </div>
+  <div class="photo"><img src="/author/assets/apostleangelaorange.jpg" alt="Apostle Angela Davis, host and founder of InfluencHer"></div>
+ </div>
+</section>
+
+<section class="speaking bg-white" id="speaking">
+ <div class="wrap">
+  <div>
+   <div class="eyebrow">Speaking</div>
+   <h2 class="title">Invite Angela to <em>your gathering.</em></h2>
+   <p class="body">Conferences, women's gatherings and church events. Angela brings Scripture-based teaching that moves women from confusion to clarity and into their assignment.</p>
+   <div style="margin-top:34px"><a class="btn btn-glow" href="mailto:AngelaDavisLive@gmail.com?subject=Speaking%20request%20for%20Apostle%20Angela%20Davis">Request Angela to Speak</a></div>
+   <p class="note">Requests go to AngelaDavisLive@gmail.com.</p>
+  </div>
+  <div class="topics">
+   <div class="topic"><b>Identity and Purpose</b><span>Knowing who you are in God and stepping into your assignment.</span></div>
+   <div class="topic"><b>Healing and Wholeness</b><span>Leaving the room different than you entered it.</span></div>
+   <div class="topic"><b>Understanding the Word</b><span>Growing in faith with depth, consistency and clarity.</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="live bg-blush" id="live">
+ <div class="wrap">
+  <div>
+   <div class="eyebrow">Angela Davis Live</div>
+   <h2 class="title">Ask anything. <em>Get real clarity.</em></h2>
+   <p class="body">Ask a real question and get a clear, Scripture-based answer. Measure where you stand, track your growth and go deeper at your own pace.</p>
+   <div style="margin-top:34px"><a class="btn btn-glow" href="https://angeladavislive.com">Open Angela Davis Live</a></div>
+  </div>
+  <div class="qs">
+   <a href="https://angeladavislive.com">What does God say about my identity?</a>
+   <a href="https://angeladavislive.com">How do I grow in faith consistently?</a>
+   <a href="https://angeladavislive.com">How do I understand the Word for myself?</a>
+   <a href="https://angeladavislive.com">How do I hear from God?</a>
+  </div>
+ </div>
+</section>
+
+<section class="shared bg-ivory" id="shared">
+ <div class="wrap">
+  <div class="photo"><img src="/author/assets/angela-and-sedrick.jpg" alt="Angela Davis and Sedrick Davis"></div>
+  <div>
+   <div class="eyebrow">A Shared Calling</div>
+   <h2 class="title">Writing and teaching <em>together.</em></h2>
+   <p class="body">Angela writes alongside Sedrick Davis for believers who are ready to trade religious performance for the truth of the Word. Their books are published together by Iron Pen Publishing.</p>
+   <div style="margin-top:34px"><a class="btn btn-plum" href="https://www.youtube.com/@iamgodsprisoner">Watch Sedrick's Teaching</a></div>
+  </div>
+ </div>
+</section>
+
+<footer>
+ <div class="wrap">
+  <div class="grid">
+   <div><div class="brand">Angela <em>Davis</em></div><p>Apostle, author, speaker and founder of InfluencHer. Scripture-based teaching for women who want to grow with purpose, depth and clarity.</p></div>
+   <div><h4>Explore</h4><a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a></div>
+   <div><h4>Connect</h4><a href="https://angeladavislive.com">Angela Davis Live</a><a href="https://angeladavislive.com/influencHer">InfluencHer Conference</a><a href="mailto:AngelaDavisLive@gmail.com">AngelaDavisLive@gmail.com</a></div>
+  </div>
+  <div class="legal">© 2026 Angela Davis. Books published by Iron Pen Publishing.</div>
+ </div>
+</footer>
+
+<dialog id="dlg"><div class="dlg"><img id="dImg" alt=""><div><h3 id="dTitle"></h3><p id="dBody"></p><button class="btn btn-plum btn-sm close" onclick="document.getElementById('dlg').close()">Close</button></div></div></dialog>
+
+<script>
+// One Iron Pen store serves both author sites.
+// STORE_LIVE stays false until Chief approves publishing; then each "Buy" goes to the real Shopify product page.
+const STORE='https://cj52jm-ie.myshopify.com';
+const STORE_LIVE=true;
+const REF='?ref=angela-davis';
+// price: only Chief-approved prices. Bylines verified Nov 20 2026 against Atticus book records and the IngramSpark submissions: all six list Sedrick Davis and Angela Davis as authors.
+const BOOKS=[
+ {t:'No Fake Christians, Vol. 1',s:'Not Everyone That Says, Lord, Lord',series:'No Fake Christians · Vol. 1',img:'no-fake-christians-vol1.jpg',pb:'no-fake-christians-vol-1-paperback',price:'12.99',by:'Sedrick &amp; Angela Davis'},
+ {t:'No Fake Christians, Vol. 2',s:'Progressive Confrontation',series:'No Fake Christians · Vol. 2',img:'no-fake-christians-vol2.jpg',pb:'no-fake-christians-vol-2-paperback',price:'12.99',by:'Sedrick &amp; Angela Davis'},
+ {t:'No Fake Christians, Vol. 3',s:'Rising from the Rubble',series:'No Fake Christians · Vol. 3',img:'no-fake-christians-vol3.jpg',pb:'no-fake-christians-vol-3-paperback',price:'12.99',by:'Sedrick &amp; Angela Davis'},
+ {t:'Smarter Than God',s:"When Man's Logic Replaces God's Law",series:'',img:'smarter-than-god.jpg',pb:'smarter-than-god-paperback',price:'12.99',by:'Sedrick &amp; Angela Davis'},
+ {t:'50 Shades of Christianity',s:"Identifying the Real from the Religious in Today's Church",series:'',img:'50-shades-of-christianity.jpg',pb:'50-shades-of-christianity-paperback',price:'14.99',by:'Sedrick &amp; Angela Davis'},
+ {t:'The Greatest Show on Earth',s:"God's Calling His Church Out of Performance and Back into Power",series:'',img:'the-greatest-show-on-earth.jpg',pb:'the-greatest-show-on-earth-paperback',price:'14.99',by:'Sedrick &amp; Angela Davis'}
+];
+const grid=document.getElementById('bookGrid');
+grid.innerHTML=BOOKS.map((b,i)=>{
+ const buy=STORE_LIVE
+  ? `<a class="btn btn-glow btn-sm" href="${STORE}/products/${b.pb}${REF}">Buy Paperback</a>`
+  : `<button class="btn btn-plum btn-sm" data-i="${i}">Book Details</button><span class="status">Coming to the bookstore</span>`;
+ return `<article class="book">
+  <div class="cover"><img src="/author/assets/${b.img}" alt="${b.t} cover" loading="lazy"></div>
+  <div class="series">${b.series}</div>
+  <h3>${b.t}</h3><div class="sub">${b.s}</div><div class="by">By ${b.by}</div>
+  <div class="row">${buy}</div>
+  <div class="formats" style="margin-top:10px">Paperback${b.price?` $${b.price}`:''}</div>
+ </article>`;}).join('');
+document.getElementById('storeNote').textContent = STORE_LIVE
+ ? 'Checkout is handled securely by the Iron Pen Publishing bookstore. You can return here anytime from the store menu.'
+ : 'The Iron Pen bookstore opens soon. Paperback ordering will open here as each title is released.';
+grid.addEventListener('click',e=>{const btn=e.target.closest('[data-i]'); if(!btn)return; const b=BOOKS[btn.dataset.i];
+ document.getElementById('dImg').src='/author/assets/'+b.img; document.getElementById('dTitle').textContent=b.t;
+ document.getElementById('dBody').innerHTML=`<em>${b.s}</em><br>By ${b.by}. Published by Iron Pen Publishing.<br><br>The paperback is coming to the Iron Pen bookstore.`;
+ document.getElementById('dlg').showModal();});
+</script>
+</body>
+</html>
