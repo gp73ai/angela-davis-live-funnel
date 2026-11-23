@@ -198,6 +198,22 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
  .dlg{grid-template-columns:1fr;text-align:left}.dlg img{width:120px}
  .btn{padding:16px 26px}
 }
+
+/* Bible Growth Guides — Angela's pink/ivory storefront treatment */
+#studies{padding:88px 0;background:#fffaf8}
+.bgg-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.bgg-card{background:white;border:1px solid #f1d3e0;border-radius:16px;overflow:hidden;box-shadow:0 12px 30px rgba(42,10,30,.08);display:flex;flex-direction:column}
+.bgg-card>a{display:block;background:#fdf0f5;aspect-ratio:2000/2828;overflow:hidden}
+.bgg-card img{display:block;width:100%;height:100%;object-fit:cover}
+.bgg-info{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.bgg-info .eyebrow{font-size:10px;letter-spacing:.14em}
+.bgg-info h3{font-family:var(--serif);color:var(--plum);font-size:1.3rem;line-height:1.2}
+.bgg-author{font-size:.8rem;color:var(--plum-soft)}
+.bgg-price{color:var(--pink-deep);font-size:1.4rem;font-weight:700;margin-top:auto}
+.bgg-info .btn{width:100%;padding:12px 10px;text-align:center}
+.bgg-store{text-align:center;margin-top:35px}
+@media(max-width:1000px){.bgg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){#studies{padding:60px 0}.bgg-grid{grid-template-columns:1fr}.bgg-card{max-width:440px;margin:auto;width:100%}}
 </style>
 </head>
 <body>
@@ -205,13 +221,13 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
  <div class="wrap nav">
   <a class="brand" href="#top">Angela <em>Davis</em></a>
   <nav class="links">
-   <a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
+   <a href="#books">Books</a><a href="#studies">Bible Growth Guides</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
   </nav>
   <a class="btn btn-glow" href="#books">Shop Books</a>
   <button class="menu-btn" aria-label="Open menu" onclick="document.getElementById('mm').classList.toggle('open')">&#9776;</button>
  </div>
  <nav class="mobile-menu" id="mm" onclick="this.classList.remove('open')">
-  <a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
+  <a href="#books">Books</a><a href="#studies">Bible Growth Guides</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#live">Angela Davis Live</a>
  </nav>
 </header>
 
@@ -224,7 +240,7 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
    <p class="lead">Scripture-based understanding for women who want to grow with purpose, depth and clarity, not confusion.</p>
    <div class="ctas">
     <a class="btn btn-glow" href="#books">Explore Her Books</a>
-    <a class="btn btn-plum" href="#influencher">Discover InfluencHer</a>
+    <a class="btn btn-plum" href="#studies">Browse Bible Growth Guides</a>
    </div>
    <div class="sig">Real answers. Real growth. Real clarity.</div>
   </div>
@@ -240,6 +256,36 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
   </div>
   <div class="books" id="bookGrid"></div>
   <p class="store-note" id="storeNote"></p>
+ </div>
+</section>
+
+
+<section class="bg-ivory" id="studies" aria-labelledby="bgg-title">
+ <div class="wrap">
+  <div style="text-align:center;max-width:800px;margin:0 auto 42px">
+   <div class="eyebrow">The Study Library</div>
+   <h2 class="title" id="bgg-title">Bible Growth <em>Guides.</em></h2>
+   <p class="body" style="margin:0 auto">Short, practical Scripture-based studies from the shared IronPen Publishing library. Each digital guide is delivered after purchase.</p>
+  </div>
+  <div class="bgg-grid">
+   <article class="bgg-card">
+    <a href="https://cj52jm-ie.myshopify.com/products/stop-calling-it-a-season" aria-label="Shop Stop Calling It a Season"><img data-bgg-handle="stop-calling-it-a-season" alt="Stop Calling It a Season study cover" loading="lazy"></a>
+    <div class="bgg-info"><span class="eyebrow">Christian Living</span><h3>Stop Calling It a Season</h3><p class="bgg-author">By Apostle Sedrick Davis</p><p class="bgg-price">$4.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/stop-calling-it-a-season">Get It Now</a></div>
+   </article>
+   <article class="bgg-card">
+    <a href="https://cj52jm-ie.myshopify.com/products/the-fake-christian-checklist" aria-label="Shop Fake Christian Checklist"><img data-bgg-handle="the-fake-christian-checklist" alt="The Fake Christian Checklist study cover" loading="lazy"></a>
+    <div class="bgg-info"><span class="eyebrow">Christian Living / Faith</span><h3>The Fake Christian Checklist</h3><p class="bgg-author">By Apostle Sedrick Davis</p><p class="bgg-price">$1.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/the-fake-christian-checklist">Get It Now</a></div>
+   </article>
+   <article class="bgg-card">
+    <a href="https://cj52jm-ie.myshopify.com/products/why-your-faith-isnt-working" aria-label="Shop Why Your Faith Isn't Working"><img data-bgg-handle="why-your-faith-isnt-working" alt="Why Your Faith Isn't Working study cover" loading="lazy"></a>
+    <div class="bgg-info"><span class="eyebrow">Faith</span><h3>Why Your Faith Isn't Working</h3><p class="bgg-author">By Apostle Sedrick Davis</p><p class="bgg-price">$3.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/why-your-faith-isnt-working">Get It Now</a></div>
+   </article>
+   <article class="bgg-card">
+    <a href="https://cj52jm-ie.myshopify.com/products/when-prayer-feels-dead" aria-label="Shop When Prayer Feels Dead"><img data-bgg-handle="when-prayer-feels-dead" alt="When Prayer Feels Dead and How to Fix It study cover" loading="lazy"></a>
+    <div class="bgg-info"><span class="eyebrow">Prayer</span><h3>When Prayer Feels Dead and How to Fix It</h3><p class="bgg-author">By Apostle Sedrick Davis</p><p class="bgg-price">$2.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/when-prayer-feels-dead">Get It Now</a></div>
+   </article>
+  </div>
+  <p class="bgg-store"><a class="btn btn-plum" href="https://cj52jm-ie.myshopify.com/collections/all">Visit IronPen Publishing Bookstore</a></p>
  </div>
 </section>
 
@@ -347,7 +393,7 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
  <div class="wrap">
   <div class="grid">
    <div><div class="brand">Angela <em>Davis</em></div><p>Apostle, author, speaker and founder of InfluencHer. Scripture-based teaching for women who want to grow with purpose, depth and clarity.</p></div>
-   <div><h4>Explore</h4><a href="#books">Books</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#watch">Watch</a></div>
+   <div><h4>Explore</h4><a href="#books">Books</a><a href="#studies">Bible Growth Guides</a><a href="#about">About Angela</a><a href="#influencher">InfluencHer</a><a href="#speaking">Speaking</a><a href="#watch">Watch</a></div>
    <div><h4>Connect</h4><a href="https://angeladavislive.com">Angela Davis Live</a><a href="https://angeladavislive.com/influencHer">InfluencHer Conference</a><a href="https://www.youtube.com/@angeladavislive" target="_blank" rel="noopener">YouTube</a><a href="mailto:AngelaDavisLive@gmail.com">AngelaDavisLive@gmail.com</a></div>
   </div>
   <div class="legal">© 2026 Angela Davis. Books published by Iron Pen Publishing.</div>
@@ -390,6 +436,15 @@ grid.addEventListener('click',e=>{const btn=e.target.closest('[data-i]'); if(!bt
  document.getElementById('dImg').src='/author/assets/'+b.img; document.getElementById('dTitle').textContent=b.t;
  document.getElementById('dBody').innerHTML=`<em>${b.s}</em><br>By ${b.by}. Published by Iron Pen Publishing.<br><br>The paperback is coming to the Iron Pen bookstore.`;
  document.getElementById('dlg').showModal();});
+
+// Resolve cover images from live Shopify product data; the exact approved cover stays centralized.
+document.querySelectorAll('#studies img[data-bgg-handle]').forEach(function(img){
+ const handle=img.getAttribute('data-bgg-handle');
+ fetch('https://cj52jm-ie.myshopify.com/products/'+encodeURIComponent(handle)+'.js',{mode:'cors',credentials:'omit'})
+ .then(function(r){if(!r.ok)throw new Error('shopify');return r.json()})
+ .then(function(p){const src=p.featured_image||(p.images&&p.images[0]);if(src)img.src=src.startsWith('//')?'https:'+src:src;})
+ .catch(function(){img.alt='Cover available on the product page';});
+});
 </script>
 </body>
 </html>
