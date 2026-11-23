@@ -290,11 +290,12 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
     <img data-bgg-handle="the-fake-christian-checklist-angela-davis-edition" alt="" loading="lazy">
     <img data-bgg-handle="why-your-faith-isnt-working-angela-davis-edition" alt="" loading="lazy">
     <img data-bgg-handle="when-prayer-feels-dead-angela-davis-edition" alt="" loading="lazy">
+    <img data-bgg-handle="how-to-pray-to-god-angela-davis-edition" alt="" loading="lazy">
    </span>
    <span class="angela-cover-stack-copy">
-    <span class="angela-cover-stack-badge">4 Bible Growth Guides</span>
+    <span class="angela-cover-stack-badge" id="angela-study-count">4 Bible Growth Guides</span>
     <span class="angela-cover-stack-title">Explore Angela's Study Library</span>
-    <span>Four practical Scripture-based guides, with more to come.</span>
+    <span>Practical Scripture-based guides, with more to come.</span>
     <span class="angela-cover-stack-action">View all studies &rarr;</span>
    </span>
   </a>
@@ -314,6 +315,10 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
    <article class="bgg-card">
     <a href="https://cj52jm-ie.myshopify.com/products/when-prayer-feels-dead-angela-davis-edition" aria-label="Shop When Prayer Feels Dead"><img data-bgg-handle="when-prayer-feels-dead-angela-davis-edition" alt="When Prayer Feels Dead and How to Fix It study cover" loading="lazy"></a>
     <div class="bgg-info"><span class="eyebrow">Prayer</span><h3>When Prayer Feels Dead and How to Fix It</h3><p class="bgg-author">By Apostle Angela Davis</p><p class="bgg-price">$2.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/when-prayer-feels-dead-angela-davis-edition">Get It Now</a></div>
+   </article>
+   <article class="bgg-card">
+    <a href="https://cj52jm-ie.myshopify.com/products/how-to-pray-to-god-angela-davis-edition" aria-label="Shop How to Pray to God"><img data-bgg-handle="how-to-pray-to-god-angela-davis-edition" alt="How to Pray to God by Apostle Angela Davis study cover" loading="lazy"></a>
+    <div class="bgg-info"><span class="eyebrow">Faith / Prayer</span><h3>How to Pray to God</h3><p class="bgg-author">By Apostle Angela Davis</p><p class="bgg-price">$4.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/how-to-pray-to-god-angela-davis-edition">Get It Now</a></div>
    </article>
   </div>
   <p class="bgg-store"><a class="btn btn-plum" href="https://cj52jm-ie.myshopify.com/collections/books">Visit IronPen Publishing Bookstore — Books</a></p>
@@ -467,6 +472,11 @@ grid.addEventListener('click',e=>{const btn=e.target.closest('[data-i]'); if(!bt
  document.getElementById('dImg').src='/author/assets/'+b.img; document.getElementById('dTitle').textContent=b.t;
  document.getElementById('dBody').innerHTML=`<em>${b.s}</em><br>By ${b.by}. Published by Iron Pen Publishing.<br><br>The paperback is coming to the Iron Pen bookstore.`;
  document.getElementById('dlg').showModal();});
+
+// Count actual study cards so the collection badge updates automatically as the library grows.
+const angelaStudyCount=document.querySelectorAll('#angela-study-list .bgg-card').length;
+const angelaStudyBadge=document.getElementById('angela-study-count');
+if(angelaStudyBadge)angelaStudyBadge.textContent=angelaStudyCount+' Bible Growth Guides';
 
 // Resolve cover images from live Shopify product data; the exact approved cover stays centralized.
 document.querySelectorAll('#studies img[data-bgg-handle]').forEach(function(img){
