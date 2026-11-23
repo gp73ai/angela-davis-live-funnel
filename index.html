@@ -955,6 +955,7 @@
   <div class="product-grid">
 
     <div class="product-card">
+      <a href="https://cj52jm-ie.myshopify.com/products/stop-calling-it-a-season" target="_blank" rel="noopener" aria-label="View Stop Calling It a Season"><img class="bgg-cover" data-bgg-handle="stop-calling-it-a-season" alt="Stop Calling It a Season Bible Growth Guide cover" loading="lazy" style="display:block;width:100%;max-width:250px;aspect-ratio:2000/2828;object-fit:contain;margin:0 auto 16px;border-radius:7px;background:#1b1b1b" /></a>
       <div class="product-badge">PDF</div>
       <div class="product-price">$4.99</div>
       <div class="product-name">Stop Calling It a Season</div>
@@ -964,6 +965,7 @@
     </div>
 
     <div class="product-card">
+      <a href="https://cj52jm-ie.myshopify.com/products/the-fake-christian-checklist" target="_blank" rel="noopener" aria-label="View Fake Christian Checklist"><img class="bgg-cover" data-bgg-handle="the-fake-christian-checklist" alt="Fake Christian Checklist Bible Growth Guide cover" loading="lazy" style="display:block;width:100%;max-width:250px;aspect-ratio:2000/2828;object-fit:contain;margin:0 auto 16px;border-radius:7px;background:#1b1b1b" /></a>
       <div class="product-badge">PDF</div>
       <div class="product-price">$1.99</div>
       <div class="product-name">Fake Christian Checklist</div>
@@ -973,6 +975,7 @@
     </div>
 
     <div class="product-card">
+      <a href="https://cj52jm-ie.myshopify.com/products/why-your-faith-isnt-working" target="_blank" rel="noopener" aria-label="View Why Your Faith Isn't Working"><img class="bgg-cover" data-bgg-handle="why-your-faith-isnt-working" alt="Why Your Faith Isn't Working Bible Growth Guide cover" loading="lazy" style="display:block;width:100%;max-width:250px;aspect-ratio:2000/2828;object-fit:contain;margin:0 auto 16px;border-radius:7px;background:#1b1b1b" /></a>
       <div class="product-badge">PDF</div>
       <div class="product-price">$3.99</div>
       <div class="product-name">Why Your Faith Isn't Working</div>
@@ -982,6 +985,7 @@
     </div>
 
     <div class="product-card">
+      <a href="https://cj52jm-ie.myshopify.com/products/when-prayer-feels-dead" target="_blank" rel="noopener" aria-label="View When Prayer Feels Dead and How to Fix It"><img class="bgg-cover" data-bgg-handle="when-prayer-feels-dead" alt="When Prayer Feels Dead and How to Fix It Bible Growth Guide cover" loading="lazy" style="display:block;width:100%;max-width:250px;aspect-ratio:2000/2828;object-fit:contain;margin:0 auto 16px;border-radius:7px;background:#1b1b1b" /></a>
       <div class="product-badge">PDF</div>
       <div class="product-price">$2.99</div>
       <div class="product-name">When Prayer Feels Dead and How to Fix It</div>
@@ -1009,6 +1013,25 @@
   </div>
 
 </div>
+
+<script>
+/* Load the exact current Shopify product image for each Bible Growth Guide.
+   Product data stays in Shopify; no duplicate cover files or guessed CDN paths. */
+(function () {
+  document.querySelectorAll('img[data-bgg-handle]').forEach(function (img) {
+    const handle = img.getAttribute('data-bgg-handle');
+    const url = 'https://cj52jm-ie.myshopify.com/products/' + encodeURIComponent(handle) + '.js';
+    fetch(url, {mode:'cors',credentials:'omit'})
+      .then(function (r) { if (!r.ok) throw new Error('product unavailable'); return r.json(); })
+      .then(function (data) {
+        const src = data.featured_image || (data.images && data.images[0]);
+        if (!src) throw new Error('image unavailable');
+        img.src = src.startsWith('//') ? 'https:' + src : src;
+      })
+      .catch(function () { img.style.display = 'none'; });
+  });
+})();
+</script>
 
 <!-- ─── FRAMEWORK CALLOUT ─── -->
 <div style="max-width:800px;margin:0 auto;padding:0 32px 80px">
