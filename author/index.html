@@ -214,6 +214,22 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
 .bgg-store{text-align:center;margin-top:35px}
 @media(max-width:1000px){.bgg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){#studies{padding:60px 0}.bgg-grid{grid-template-columns:1fr}.bgg-card{max-width:440px;margin:auto;width:100%}}
+
+/* Angela Bible Growth Guides collection stack; existing product cards remain unchanged */
+.angela-cover-stack{display:grid;grid-template-columns:minmax(190px,300px) minmax(0,1fr);gap:32px;align-items:center;max-width:850px;margin:0 auto 44px;padding:24px 28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(125deg,#fff,#fdf0f5);box-shadow:0 14px 35px rgba(90,10,50,.09);transition:transform .2s,box-shadow .2s}
+.angela-cover-stack:hover{transform:translateY(-3px);box-shadow:0 22px 42px rgba(90,10,50,.15)}
+.angela-cover-stack:focus-visible{outline:3px solid var(--pink-deep);outline-offset:4px}
+.angela-cover-stack-art{height:205px;position:relative;isolation:isolate;display:block}
+.angela-cover-stack-art img{position:absolute;top:8px;left:50%;width:114px;height:161px;object-fit:cover;border-radius:5px;border:2px solid #fff;box-shadow:0 11px 25px rgba(42,10,30,.32);transform-origin:bottom center;transition:transform .2s}
+.angela-cover-stack-art img:nth-child(1){transform:translateX(-105%) rotate(-16deg);z-index:1}
+.angela-cover-stack-art img:nth-child(2){transform:translateX(-74%) rotate(-8deg);z-index:2}
+.angela-cover-stack-art img:nth-child(3){transform:translateX(-39%) rotate(4deg);z-index:3}
+.angela-cover-stack-art img:nth-child(4){transform:translateX(-6%) rotate(13deg);z-index:4}
+.angela-cover-stack-copy{display:flex;flex-direction:column;gap:10px}
+.angela-cover-stack-badge{align-self:flex-start;padding:5px 13px;border-radius:30px;background:#fbd6e6;color:var(--pink-deep);font-size:.8rem;font-weight:700}
+.angela-cover-stack-title{font-family:var(--serif);font-size:clamp(1.5rem,2.5vw,2rem);font-weight:600;line-height:1.2}
+.angela-cover-stack-action{color:var(--pink-deep);font-weight:700;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:560px){.angela-cover-stack{grid-template-columns:1fr;gap:4px;padding:20px 16px;text-align:center}.angela-cover-stack-art{width:100%;height:190px}.angela-cover-stack-art img{top:5px;width:100px;height:141px}.angela-cover-stack-badge{align-self:center}}
 </style>
 </head>
 <body>
@@ -267,7 +283,22 @@ dialog::backdrop{background:rgba(42,10,30,.45)}
    <h2 class="title" id="bgg-title">Bible Growth <em>Guides.</em></h2>
    <p class="body" style="margin:0 auto">Short, practical Scripture-based Bible Growth Guides by Apostle Angela Davis. Each digital guide is delivered after purchase.</p>
   </div>
-  <div class="bgg-grid">
+
+  <a class="angela-cover-stack" href="#angela-study-list" aria-label="View all Bible Growth Guides by Apostle Angela Davis">
+   <span class="angela-cover-stack-art" aria-hidden="true">
+    <img data-bgg-handle="stop-calling-it-a-season-angela-davis-edition" alt="" loading="lazy">
+    <img data-bgg-handle="the-fake-christian-checklist-angela-davis-edition" alt="" loading="lazy">
+    <img data-bgg-handle="why-your-faith-isnt-working-angela-davis-edition" alt="" loading="lazy">
+    <img data-bgg-handle="when-prayer-feels-dead-angela-davis-edition" alt="" loading="lazy">
+   </span>
+   <span class="angela-cover-stack-copy">
+    <span class="angela-cover-stack-badge">4 Bible Growth Guides</span>
+    <span class="angela-cover-stack-title">Explore Angela's Study Library</span>
+    <span>Four practical Scripture-based guides, with more to come.</span>
+    <span class="angela-cover-stack-action">View all studies &rarr;</span>
+   </span>
+  </a>
+  <div class="bgg-grid" id="angela-study-list">
    <article class="bgg-card">
     <a href="https://cj52jm-ie.myshopify.com/products/stop-calling-it-a-season-angela-davis-edition" aria-label="Shop Stop Calling It a Season"><img data-bgg-handle="stop-calling-it-a-season-angela-davis-edition" alt="Stop Calling It a Season study cover" loading="lazy"></a>
     <div class="bgg-info"><span class="eyebrow">Christian Living</span><h3>Stop Calling It a Season</h3><p class="bgg-author">By Apostle Angela Davis</p><p class="bgg-price">$4.99</p><a class="btn btn-glow btn-sm" href="https://cj52jm-ie.myshopify.com/products/stop-calling-it-a-season-angela-davis-edition">Get It Now</a></div>
