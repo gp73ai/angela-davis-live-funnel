@@ -683,7 +683,10 @@ const BOOKS=[
 ];
 const grid=document.getElementById('bookGrid');
 grid.innerHTML=BOOKS.map((b,i)=>{
- const buy=STORE_LIVE
+ const isGreatestShowHold = b.pb === 'the-greatest-show-on-earth-paperback';
+ const buy=isGreatestShowHold
+  ? `<span class="status">Coming Soon</span>`
+  : STORE_LIVE
   ? `<a class="btn btn-glow btn-sm" href="${STORE}/products/${b.pb}${REF}">Buy Paperback</a>`
   : `<button class="btn btn-plum btn-sm" data-i="${i}">Book Details</button><span class="status">Coming to the bookstore</span>`;
  return `<article class="book">
